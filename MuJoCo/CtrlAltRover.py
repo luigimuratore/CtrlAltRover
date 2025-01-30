@@ -276,7 +276,7 @@ try:
         elif action == 1:
             set_motor_mode("translation_right")
             set_motor_speed(speed)
-            print("Left - speed:", speed)
+            print("Right - speed:", speed)
         elif action == 2:
             set_motor_mode("stop")
             print("Stop")
