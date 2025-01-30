@@ -250,7 +250,8 @@ if not os.path.exists("parking.zip"):
     exit()
 
 try:
-    model = PPO.load("parking.zip")
+    # Load the trained model
+    model = PPO.load("parking")
     print("Model loaded successfully.")
 except Exception as e:
     print(f"Error loading model: {e}")
