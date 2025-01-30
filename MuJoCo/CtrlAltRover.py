@@ -79,7 +79,6 @@ def get_distance(trigger, echo):
 
     while GPIO.input(echo) == 0:
         start_time = time.time()
-    
     while GPIO.input(echo) == 1:
         stop_time = time.time()
     
@@ -96,6 +95,24 @@ def get_real_observation():
     
     return np.array([front_distance, left_distance, right_distance, rear_distance], dtype=np.float32)
 
+def stop_motors():
+    """
+    Stops all motors by setting all motor control pins to LOW.
+    """
+    GPIO.output(IN1, GPIO.LOW)
+    GPIO.output(IN2, GPIO.LOW)
+    GPIO.output(IN3, GPIO.LOW)
+    GPIO.output(IN4, GPIO.LOW)
+    GPIO.output(IN5, GPIO.LOW)
+    GPIO.output(IN6, GPIO.LOW)
+    GPIO.output(IN7, GPIO.LOW)
+    GPIO.output(IN8, GPIO.LOW)
+
+    # Optionally set PWM duty cycles to 0
+    pwm_ena.ChangeDutyCycle(0)
+    pwm_enb.ChangeDutyCycle(0)
+    pwm_enc.ChangeDutyCycle(0)
+    pwm_end.ChangeDutyCycle(0)
 
 def set_motor_speed(speed):
     """
@@ -116,6 +133,9 @@ def set_motor_mode(mode):
     """
     Set motor direction and pattern based on the selected mode.
     """
+
+    stop_motors()
+
     if mode == "forward":
         GPIO.output(IN1, GPIO.HIGH)
         GPIO.output(IN2, GPIO.LOW)
@@ -222,7 +242,13 @@ if not os.path.exists("parking.zip"):
     print("Error: parking.zip not found! Please transfer the trained model to the Raspberry Pi.")
     exit()
 
-model = PPO.load("parking.zip")
+try:
+    model = PPO.load("parking.zip")
+    print("Model loaded successfully.")
+except Exception as e:
+    print(f"Error loading model: {e}")
+    exit()
+
 
 # --- Main Control Loop ---
 try:    
@@ -248,11 +274,11 @@ try:
             set_motor_mode("translate_right")
             set_motor_speed(speed)
         else:
-            set_motor_mode("stop")
+            stop_motors()
 
         time.sleep(0.1)  # Adjust loop timing
 
 except KeyboardInterrupt:
     print("\nStopping Robot...")
-    set_motor_mode("stop")
+    stop_motors()
     GPIO.cleanup()
