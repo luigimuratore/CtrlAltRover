@@ -208,6 +208,15 @@ def set_motor_mode(mode):
         GPIO.output(IN6, GPIO.HIGH)
         GPIO.output(IN7, GPIO.HIGH)
         GPIO.output(IN8, GPIO.LOW)
+    elif mode == "stop":
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.LOW)
+        GPIO.output(IN4, GPIO.LOW)
+        GPIO.output(IN5, GPIO.LOW)
+        GPIO.output(IN6, GPIO.LOW)
+        GPIO.output(IN7, GPIO.LOW)
+        GPIO.output(IN8, GPIO.LOW)
         
 
 # --- Load Trained PPO Model ---
@@ -238,11 +247,11 @@ try:
             set_motor_mode("translate_right")
             set_motor_speed(speed)
         else:
-            stop_robot()
+            set_motor_mode("stop")
 
         time.sleep(0.1)  # Adjust loop timing
 
 except KeyboardInterrupt:
     print("\nStopping Robot...")
-    stop_robot()
+    set_motor_mode("stop")
     GPIO.cleanup()
