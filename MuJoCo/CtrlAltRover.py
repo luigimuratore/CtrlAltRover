@@ -156,7 +156,7 @@ def set_motor_mode(mode):
         GPIO.output(IN6, GPIO.HIGH)
         GPIO.output(IN7, GPIO.LOW)
         GPIO.output(IN8, GPIO.HIGH)
-    elif mode == "traslation_left":
+    elif mode == "translation_left":
         GPIO.output(IN1, GPIO.LOW)
         GPIO.output(IN2, GPIO.HIGH)
         GPIO.output(IN3, GPIO.HIGH)
@@ -165,7 +165,7 @@ def set_motor_mode(mode):
         GPIO.output(IN6, GPIO.LOW)
         GPIO.output(IN7, GPIO.LOW)
         GPIO.output(IN8, GPIO.HIGH)
-    elif mode == "traslation_right":
+    elif mode == "translation_right":
         GPIO.output(IN1, GPIO.HIGH)
         GPIO.output(IN2, GPIO.LOW)
         GPIO.output(IN3, GPIO.LOW)
@@ -255,7 +255,7 @@ except Exception as e:
 
 # --- Main Control Loop ---
 try:    
-    #speed = float(input("Choose a percentage speed value (0-100): "))
+    speed = float(input("Choose a percentage speed value (0-100): "))
     
     print("Starting RL Inference on Real Robot...")
 
@@ -267,19 +267,19 @@ try:
         action, _states = model.predict(obs, deterministic=True)
         print("Action: ", action)
 
-        speed = 60
+
         # Map actions to motor commands
         if action == 0:
             set_motor_mode("forward")
-            set_motor_speed(60)
+            set_motor_speed(speed)
             print("forward - speed:", speed)
         elif action == 1:
-            set_motor_mode("translate_left")
-            set_motor_speed(60)
+            set_motor_mode("translation_left")
+            set_motor_speed(speed)
             print("left - speed:", speed)
         elif action == 2:
-            set_motor_mode("translate_right")
-            set_motor_speed(60)
+            set_motor_mode("translation_right")
+            set_motor_speed(speed)
             print("right - speed:", speed)
         else:
             stop_motors()
