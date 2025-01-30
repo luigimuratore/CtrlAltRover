@@ -1,0 +1,134 @@
+<mujoco>
+    <option gravity="0 0 -9.810"/>
+
+    <!-- Robot Body -->
+    <worldbody>
+            <light diffuse="0.8 0.8 0.8" pos="0 0 100" dir="0 0 -1"/>
+        <geom type="plane" size="20 20 0.1" rgba="1 1 1 1" material="grid"/>
+
+        <!-- Base structure -->
+        <body name="robot_body" pos="0 0 0.3" euler="0 90 0">
+            <joint type="free"/>
+            <geom type="box" size="0.15 0.3 0.45" rgba="0.9 0.9 0 1"/>
+            <inertial pos="0 0 0.07" mass="4.2" diaginertia="0.0329 0.0378 0.0145"/>
+
+
+            <!-- Wheels -->
+            <!-- Front-Left Wheel -->
+            <body pos="0.06 0.405 0.36" euler="90 0 0">
+                <joint name="front_left_wheel" type="hinge" axis="0 0 -1"/>
+                <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
+            </body>
+
+            <!-- Front-Right Wheel -->
+            <body pos="0.06 -0.405 0.36" euler="90 0 0">
+                <joint name="front_right_wheel" type="hinge" axis="0 0 -1"/>
+                <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
+            </body>
+
+            <!-- Rear-Left Wheel -->
+            <body pos="0.06 0.405 -0.36" euler="90 0 0">
+                <joint name="rear_left_wheel" type="hinge" axis="0 0 -1"/>
+                <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
+            </body>
+
+            <!-- Rear-Right Wheel -->
+            <body pos="0.06 -0.405 -0.36" euler="90 0 0">
+                <joint name="rear_right_wheel" type="hinge" axis="0 0 -1"/>
+                <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
+            </body>
+
+
+
+            <!-- SIMULATED Wheels -->
+            <!-- S Front-Left Wheel -->
+            <body pos="0.06 0.405 0.36" euler="0 0 90">
+                <joint name="SIM_front_left_wheel" type="hinge" axis="0 0 -1"/>
+                <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
+            </body>
+
+            <!-- S Front-Right Wheel -->
+            <body pos="0.06 -0.405 0.36" euler="0 0 90">
+                <joint name="SIM_front_right_wheel" type="hinge" axis="0 0 -1"/>
+                <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
+            </body>
+
+            <!-- S Rear-Left Wheel -->
+            <body pos="0.06 0.405 -0.36" euler="0 0 90">
+                <joint name="SIM_rear_left_wheel" type="hinge" axis="0 0 -1"/>
+                <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
+            </body>
+
+            <!-- S Rear-Right Wheel -->
+            <body pos="0.06 -0.405 -0.36" euler="0 0 90">
+                <joint name="SIM_rear_right_wheel" type="hinge" axis="0 0 -1"/>
+                <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
+            </body>
+
+
+
+            <!-- Ultrasonic Sensors -->
+            <!-- Front Sensor -->
+            <site name="sito_sensor_front" pos="0 0 0.45" size="0.02 40" rgba="1 0 0 1" euler="0 0.9 0"/>
+            <!-- Rear Sensor -->
+            <site name="sito_sensor_rear" pos="0 0 -0.45" size="0.02 40" rgba="1 0 0 1" euler="180 0.9 0"/>
+            <!-- Left Sensor -->
+            <site name="sito_sensor_left" pos="0 0.3 0" size="0.02 40" rgba="0 0.9 0  1" euler="-90 0.9 0"/>
+            <!-- Right Sensor -->
+            <site name="sito_sensor_right" pos="0 -0.3 0" size="0.02 40" rgba="1 0 0 1" euler="90 0.9 0"/>
+
+        </body>
+
+
+        <!-- Walls for Testing -->
+        <body name="wall_A" pos="-3 -1 0.5" euler="0 0 90">
+            <geom name="wall_geom_A" type="box" size="0.02 4.5 0.5" rgba="0.6 0.3 0.3 1"/>
+        </body> 
+
+        <body name="wall_B" pos="1.5 -2 0.5" euler="0 0 0">
+            <geom name="wall_geom_B" type="box" size="0.02 1 0.5" rgba="0.6 0.3 0.3 1"/>
+        </body> 
+
+        <body name="wall_C" pos="3 -3 0.5" euler="0 0 90">
+            <geom name="wall_geom_C" type="box" size="0.02 1.5 0.5" rgba="0.6 0.3 0.3 1"/>
+        </body>
+    
+        <body name="wall_D" pos="4.5 -2 0.5" euler="0 0 0">
+            <geom name="wall_geom_D" type="box" size="0.02 1 0.5" rgba="0.6 0.3 0.3 1"/>
+        </body> 
+
+        <body name="wall_E" pos="9 -1 0.5" euler="0 0 90">
+            <geom name="wall_geom_E" type="box" size="0.02 4.5 0.5" rgba="0.6 0.3 0.3 1"/>
+        </body> 
+
+
+
+
+    </worldbody>
+    <actuator>
+    
+        <velocity name="FL_wheel" joint="front_left_wheel" kv="100"/>
+        <velocity name="FR_wheel" joint="front_right_wheel" kv="100"/>
+        <velocity name="RL_wheel" joint="rear_left_wheel" kv="100"/>
+        <velocity name="RR_wheel" joint="rear_right_wheel" kv="100"/>
+
+        <velocity name="SIM_FL_wheel" joint="SIM_front_left_wheel" kv="100"/>
+        <velocity name="SIM_FR_wheel" joint="SIM_front_right_wheel" kv="100"/>
+        <velocity name="SIM_RL_wheel" joint="SIM_rear_left_wheel" kv="100"/>
+        <velocity name="SIM_RR_wheel" joint="SIM_rear_right_wheel" kv="100"/>
+
+    </actuator>
+
+    <asset>
+        <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="1 1 1" rgb2="0 0 0"/>
+        <material name="grid" texture="grid" texrepeat="10 10" reflectance="0.2"/>
+    </asset>
+
+    <!-- Sensors -->
+    <sensor>
+        <rangefinder name="sensor_front" site="sito_sensor_front"/>
+        <rangefinder name="sensor_rear" site="sito_sensor_rear"/>
+        <rangefinder name="sensor_left" site="sito_sensor_left"/>
+        <rangefinder name="sensor_right" site="sito_sensor_right"/>
+    </sensor>
+</mujoco>
