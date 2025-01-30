@@ -261,6 +261,7 @@ try:
 
     while True:
         obs = get_real_observation()
+        print("----------------------")
         print("OBS: ", obs)
 
         action, _states = model.predict(obs, deterministic=True)
@@ -270,15 +271,15 @@ try:
         if action == 0:
             set_motor_mode("forward")
             set_motor_speed(speed)
-            print("forward")
+            print("forward - speed: ", speed)
         elif action == 1:
             set_motor_mode("translate_left")
             set_motor_speed(speed)
-            print("left")
+            print("left - speed: ", speed)
         elif action == 2:
             set_motor_mode("translate_right")
             set_motor_speed(speed)
-            print("right")
+            print("right - speed: ", speed)
         else:
             stop_motors()
 
