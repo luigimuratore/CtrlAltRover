@@ -89,11 +89,18 @@ def get_distance(trigger, echo):
 def get_real_observation():
     """ Get real sensor readings as observation array """
     front_distance = get_distance(TRIG_FRONT, ECHO_FRONT)
-    left_distance = get_distance(TRIG_LEFT, ECHO_LEFT)
-    right_distance = get_distance(TRIG_RIGHT, ECHO_RIGHT)
+    print("Front distance: ", front_distance)
+
     rear_distance = get_distance(TRIG_REAR, ECHO_REAR)
-    
-    return np.array([front_distance, left_distance, right_distance, rear_distance], dtype=np.float32)
+    print("Rear distance: ", rear_distance)
+
+    left_distance = get_distance(TRIG_LEFT, ECHO_LEFT)
+    print("Left distance: ", left_distance)
+
+    right_distance = get_distance(TRIG_RIGHT, ECHO_RIGHT)
+    print("Right distance: ", right_distance)
+
+    return np.array([front_distance, rear_distance, left_distance, right_distance], dtype=np.float32)
 
 def stop_motors():
     """
