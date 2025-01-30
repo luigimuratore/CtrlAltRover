@@ -116,8 +116,6 @@ def set_motor_mode(mode):
     """
     Set motor direction and pattern based on the selected mode.
     """
-    stop_motors()
-
     if mode == "forward":
         GPIO.output(IN1, GPIO.HIGH)
         GPIO.output(IN2, GPIO.LOW)
