@@ -64,28 +64,6 @@ pwm_enc.start(0)
 pwm_end.start(0)
 
 
-def get_distance(trigger, echo):
-    """
-    Measure distance using HC-SR04.
-    """
-    GPIO.output(trig, GPIO.LOW)
-    time.sleep(0.01)  # Stabilize sensor
-    GPIO.output(trig, GPIO.HIGH)
-    time.sleep(0.00001)
-    GPIO.output(trig, GPIO.LOW)
-    
-    start_time = time.time()
-    stop_time = time.time()
-
-    while GPIO.input(echo) == 0:
-        start_time = time.time()
-    while GPIO.input(echo) == 1:
-        stop_time = time.time()
-    
-    elapsed_time = stop_time - start_time
-    distance = (elapsed_time * 34300) / 2  # Convert to cm
-    return distance
-
 def get_real_observation():
     """ Get real sensor readings as observation array """
     front_distance = get_distance(TRIG_FRONT, ECHO_FRONT)
@@ -101,6 +79,30 @@ def get_real_observation():
     print("Right distance: ", right_distance)
 
     return np.array([front_distance, rear_distance, left_distance, right_distance], dtype=np.float32)
+
+
+def get_distance(trigger, echo):
+    """
+    Measure distance using HC-SR04.
+    """
+    GPIO.output(trigger, GPIO.LOW)
+    time.sleep(0.01)  # Stabilize sensor
+    GPIO.output(trigger, GPIO.HIGH)
+    time.sleep(0.00001)
+    GPIO.output(trigger, GPIO.LOW)
+    
+    start_time = time.time()
+    stop_time = time.time()
+
+    while GPIO.input(echo) == 0:
+        start_time = time.time()
+    while GPIO.input(echo) == 1:
+        stop_time = time.time()
+    
+    elapsed_time = stop_time - start_time
+    distance = (elapsed_time * 34300) / 2  # Convert to cm
+    return distance
+
 
 def stop_motors():
     """
