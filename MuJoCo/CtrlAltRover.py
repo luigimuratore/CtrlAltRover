@@ -225,14 +225,17 @@ if not os.path.exists("parking.zip"):
 model = PPO.load("parking.zip")
 
 # --- Main Control Loop ---
-try:
-    print("Starting RL Inference on Real Robot...")
-    
+try:    
     speed = float(input("Choose a percentage speed value (0-100): "))
     
+    print("Starting RL Inference on Real Robot...")
+
     while True:
         obs = get_real_observation()
         action, _states = model.predict(obs, deterministic=True)
+
+        print("OBS: ", obs)
+        print("Action: ", action)
 
         # Map actions to motor commands
         if action == 0:
