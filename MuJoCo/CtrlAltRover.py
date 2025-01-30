@@ -67,16 +67,9 @@ pwm_end.start(0)
 def get_real_observation():
     """ Get real sensor readings as observation array """
     front_distance = get_distance(TRIG_FRONT, ECHO_FRONT)
-    print("Front distance: ", front_distance)
-
     rear_distance = get_distance(TRIG_REAR, ECHO_REAR)
-    print("Rear distance: ", rear_distance)
-
     left_distance = get_distance(TRIG_LEFT, ECHO_LEFT)
-    print("Left distance: ", left_distance)
-
     right_distance = get_distance(TRIG_RIGHT, ECHO_RIGHT)
-    print("Right distance: ", right_distance)
 
     return np.array([front_distance, rear_distance, left_distance, right_distance], dtype=np.float32)
 
@@ -277,12 +270,15 @@ try:
         if action == 0:
             set_motor_mode("forward")
             set_motor_speed(speed)
+            print("forward")
         elif action == 1:
             set_motor_mode("translate_left")
             set_motor_speed(speed)
+            print("left")
         elif action == 2:
             set_motor_mode("translate_right")
             set_motor_speed(speed)
+            print("right")
         else:
             stop_motors()
 
