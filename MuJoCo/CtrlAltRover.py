@@ -232,9 +232,9 @@ try:
 
     while True:
         obs = get_real_observation()
-        action, _states = model.predict(obs, deterministic=True)
-
         print("OBS: ", obs)
+
+        action, _states = model.predict(obs, deterministic=True)
         print("Action: ", action)
 
         # Map actions to motor commands
