@@ -272,15 +272,14 @@ try:
         if action == 0:
             set_motor_mode("forward")
             set_motor_speed(speed)
-            print("forward - speed:", speed)
+            print("Forward - speed:", speed)
         elif action == 1:
-            set_motor_mode("translation_left")
-            set_motor_speed(speed)
-            print("left - speed:", speed)
-        elif action == 2:
             set_motor_mode("translation_right")
             set_motor_speed(speed)
-            print("right - speed:", speed)
+            print("Left - speed:", speed)
+        elif action == 2:
+            set_motor_mode("stop")
+            print("Stop")
         else:
             stop_motors()
 
