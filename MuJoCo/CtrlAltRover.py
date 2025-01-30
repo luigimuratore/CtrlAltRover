@@ -255,31 +255,32 @@ except Exception as e:
 
 # --- Main Control Loop ---
 try:    
-    speed = float(input("Choose a percentage speed value (0-100): "))
+    #speed = float(input("Choose a percentage speed value (0-100): "))
     
     print("Starting RL Inference on Real Robot...")
 
     while True:
         obs = get_real_observation()
-        print("----------------------")
+        print("--------------------------------------------------")
         print("OBS: ", obs)
 
         action, _states = model.predict(obs, deterministic=True)
         print("Action: ", action)
 
+        speed = 60
         # Map actions to motor commands
         if action == 0:
             set_motor_mode("forward")
-            set_motor_speed(speed)
-            print("forward - speed: ", speed)
+            set_motor_speed(60)
+            print("forward - speed:", speed)
         elif action == 1:
             set_motor_mode("translate_left")
-            set_motor_speed(speed)
-            print("left - speed: ", speed)
+            set_motor_speed(60)
+            print("left - speed:", speed)
         elif action == 2:
             set_motor_mode("translate_right")
-            set_motor_speed(speed)
-            print("right - speed: ", speed)
+            set_motor_speed(60)
+            print("right - speed:", speed)
         else:
             stop_motors()
 
