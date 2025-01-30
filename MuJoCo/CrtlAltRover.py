@@ -65,10 +65,14 @@ pwm_end.start(0)
 
 
 def get_distance(trigger, echo):
-    """ Get distance from an HC-SR04 ultrasonic sensor """
-    GPIO.output(trigger, True)
+    """
+    Measure distance using HC-SR04.
+    """
+    GPIO.output(trig, GPIO.LOW)
+    time.sleep(0.01)  # Stabilize sensor
+    GPIO.output(trig, GPIO.HIGH)
     time.sleep(0.00001)
-    GPIO.output(trigger, False)
+    GPIO.output(trig, GPIO.LOW)
     
     start_time = time.time()
     stop_time = time.time()
@@ -81,64 +85,130 @@ def get_distance(trigger, echo):
     
     elapsed_time = stop_time - start_time
     distance = (elapsed_time * 34300) / 2  # Convert to cm
-    return np.clip(distance, 2, 400)  # Limit min/max range
+    return distance
 
 def get_real_observation():
     """ Get real sensor readings as observation array """
     front_distance = get_distance(TRIG_FRONT, ECHO_FRONT)
     left_distance = get_distance(TRIG_LEFT, ECHO_LEFT)
     right_distance = get_distance(TRIG_RIGHT, ECHO_RIGHT)
+    rear_distance = get_distance(TRIG_REAR, ECHO_REAR)
     
-    return np.array([front_distance, left_distance, right_distance], dtype=np.float32)
+    return np.array([front_distance, left_distance, right_distance, rear_distance], dtype=np.float32)
+
+
+def set_motor_speed(speed):
+    """
+    Set the speed of all motors using PWM.
+    Speed is given as a percentage (0 to 100).
+    """
+    if 0 <= speed <= 100:
+        pwm_ena.ChangeDutyCycle(speed)
+        pwm_enb.ChangeDutyCycle(speed)
+        pwm_enc.ChangeDutyCycle(speed)
+        pwm_end.ChangeDutyCycle(speed)
+    else:
+        print("Invalid speed value. Please enter a percentage between 0 and 100.")
+
 
 # --- Motor Control Functions ---
-def stop_robot():
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN2, GPIO.LOW)
-    GPIO.output(IN3, GPIO.LOW)
-    GPIO.output(IN4, GPIO.LOW)
-    GPIO.output(IN5, GPIO.LOW)
-    GPIO.output(IN6, GPIO.LOW)
-    GPIO.output(IN7, GPIO.LOW)
-    GPIO.output(IN8, GPIO.LOW)
-    pwm_left.ChangeDutyCycle(0)
-    pwm_right.ChangeDutyCycle(0)
+def set_motor_mode(mode):
+    """
+    Set motor direction and pattern based on the selected mode.
+    """
+    stop_motors()
 
-def move_forward(speed=50):
-    GPIO.output(IN1, GPIO.HIGH)
-    GPIO.output(IN2, GPIO.LOW)
-    GPIO.output(IN3, GPIO.HIGH)
-    GPIO.output(IN4, GPIO.LOW)
-    GPIO.output(IN5, GPIO.HIGH)
-    GPIO.output(IN6, GPIO.LOW)
-    GPIO.output(IN7, GPIO.HIGH)
-    GPIO.output(IN8, GPIO.LOW)
-    pwm_left.ChangeDutyCycle(speed)
-    pwm_right.ChangeDutyCycle(speed)
-
-def translate_left(speed=50):
-    GPIO.output(IN1, GPIO.LOW)
-    GPIO.output(IN2, GPIO.HIGH)
-    GPIO.output(IN3, GPIO.HIGH)
-    GPIO.output(IN4, GPIO.LOW)
-    GPIO.output(IN5, GPIO.HIGH)
-    GPIO.output(IN6, GPIO.LOW)
-    GPIO.output(IN7, GPIO.LOW)
-    GPIO.output(IN8, GPIO.HIGH)
-    pwm_left.ChangeDutyCycle(speed)
-    pwm_right.ChangeDutyCycle(speed)
-
-def translate_right(speed=50):
-    GPIO.output(IN1, GPIO.HIGH)
-    GPIO.output(IN2, GPIO.LOW)
-    GPIO.output(IN3, GPIO.LOW)
-    GPIO.output(IN4, GPIO.HIGH)
-    GPIO.output(IN5, GPIO.LOW)
-    GPIO.output(IN6, GPIO.HIGH)
-    GPIO.output(IN7, GPIO.HIGH)
-    GPIO.output(IN8, GPIO.LOW)
-    pwm_left.ChangeDutyCycle(speed)
-    pwm_right.ChangeDutyCycle(speed)
+    if mode == "forward":
+        GPIO.output(IN1, GPIO.HIGH)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.HIGH)
+        GPIO.output(IN4, GPIO.LOW)
+        GPIO.output(IN5, GPIO.HIGH)
+        GPIO.output(IN6, GPIO.LOW)
+        GPIO.output(IN7, GPIO.HIGH)
+        GPIO.output(IN8, GPIO.LOW)
+    elif mode == "backward":
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.HIGH)
+        GPIO.output(IN3, GPIO.LOW)
+        GPIO.output(IN4, GPIO.HIGH)
+        GPIO.output(IN5, GPIO.LOW)
+        GPIO.output(IN6, GPIO.HIGH)
+        GPIO.output(IN7, GPIO.LOW)
+        GPIO.output(IN8, GPIO.HIGH)
+    elif mode == "traslation_left":
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.HIGH)
+        GPIO.output(IN3, GPIO.HIGH)
+        GPIO.output(IN4, GPIO.LOW)
+        GPIO.output(IN5, GPIO.HIGH)
+        GPIO.output(IN6, GPIO.LOW)
+        GPIO.output(IN7, GPIO.LOW)
+        GPIO.output(IN8, GPIO.HIGH)
+    elif mode == "traslation_right":
+        GPIO.output(IN1, GPIO.HIGH)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.LOW)
+        GPIO.output(IN4, GPIO.HIGH)
+        GPIO.output(IN5, GPIO.LOW)
+        GPIO.output(IN6, GPIO.HIGH)
+        GPIO.output(IN7, GPIO.HIGH)
+        GPIO.output(IN8, GPIO.LOW)
+    elif mode == "diagonal_right_forward":
+        GPIO.output(IN1, GPIO.HIGH)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.LOW)
+        GPIO.output(IN4, GPIO.LOW)
+        GPIO.output(IN5, GPIO.LOW)
+        GPIO.output(IN6, GPIO.LOW)
+        GPIO.output(IN7, GPIO.HIGH)
+        GPIO.output(IN8, GPIO.LOW)
+    elif mode == "diagonal_right_backward":
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.HIGH)
+        GPIO.output(IN3, GPIO.LOW)
+        GPIO.output(IN4, GPIO.LOW)
+        GPIO.output(IN5, GPIO.LOW)
+        GPIO.output(IN6, GPIO.LOW)
+        GPIO.output(IN7, GPIO.LOW)
+        GPIO.output(IN8, GPIO.HIGH)
+    elif mode == "diagonal_left_forward":
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.HIGH)
+        GPIO.output(IN4, GPIO.LOW)
+        GPIO.output(IN5, GPIO.HIGH)
+        GPIO.output(IN6, GPIO.LOW)
+        GPIO.output(IN7, GPIO.LOW)
+        GPIO.output(IN8, GPIO.LOW)
+    elif mode == "diagonal_left_backward":
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.LOW)
+        GPIO.output(IN4, GPIO.HIGH)
+        GPIO.output(IN5, GPIO.LOW)
+        GPIO.output(IN6, GPIO.HIGH)
+        GPIO.output(IN7, GPIO.LOW)
+        GPIO.output(IN8, GPIO.LOW)
+    elif mode == "turn_left":
+        GPIO.output(IN1, GPIO.HIGH)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.LOW)
+        GPIO.output(IN4, GPIO.HIGH)
+        GPIO.output(IN5, GPIO.HIGH)
+        GPIO.output(IN6, GPIO.LOW)
+        GPIO.output(IN7, GPIO.LOW)
+        GPIO.output(IN8, GPIO.HIGH)
+    elif mode == "turn_right":
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.HIGH)
+        GPIO.output(IN3, GPIO.HIGH)
+        GPIO.output(IN4, GPIO.LOW)
+        GPIO.output(IN5, GPIO.LOW)
+        GPIO.output(IN6, GPIO.HIGH)
+        GPIO.output(IN7, GPIO.HIGH)
+        GPIO.output(IN8, GPIO.LOW)
+        
 
 # --- Load Trained PPO Model ---
 if not os.path.exists("parking.zip"):
@@ -150,17 +220,23 @@ model = PPO.load("parking.zip")
 # --- Main Control Loop ---
 try:
     print("Starting RL Inference on Real Robot...")
+    
+    speed = float(input("Choose a percentage speed value (0-100): "))
+    
     while True:
         obs = get_real_observation()
         action, _states = model.predict(obs, deterministic=True)
 
         # Map actions to motor commands
         if action == 0:
-            move_forward(60)  # Adjust speed if needed
+            set_motor_mode("forward")
+            set_motor_speed(speed)
         elif action == 1:
-            translate_left(60)
+            set_motor_mode("translate_left")
+            set_motor_speed(speed)
         elif action == 2:
-            translate_right(60)
+            set_motor_mode("translate_right")
+            set_motor_speed(speed)
         else:
             stop_robot()
 
