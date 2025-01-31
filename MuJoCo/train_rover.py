@@ -171,7 +171,7 @@ model = PPO(
 eval_callback = EvalCallback(
     env, best_model_save_path="./best_model", log_path="./logs", eval_freq=1000)
 
-model.learn(total_timesteps=20000, callback=eval_callback)
+model.learn(total_timesteps=1000000, callback=eval_callback)
 
 # Save the trained model
 model.save("parking")
