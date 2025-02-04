@@ -94,7 +94,7 @@ def get_distance(trigger, echo):
     
     elapsed_time = stop_time - start_time
     distance = (elapsed_time * 34300) / 2  # Convert to cm
-    return distance
+    return distance*30
 
 
 def stop_motors():
@@ -246,7 +246,7 @@ if not os.path.exists("parking.zip"):
 
 try:
     # Load the trained model
-    model = PPO.load("parking")
+    model = PPO.load("parking_old")
     print("Model loaded successfully.")
 except Exception as e:
     print(f"Error loading model: {e}")
@@ -264,7 +264,7 @@ try:
         print("--------------------------------------------------")
         print("OBS: ", obs)
 
-        action, _states = model.predict(obs, deterministic=True)
+        action, _states = model.predict(obs, deterministic=False)
         print("Action: ", action)
 
 
