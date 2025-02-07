@@ -2,130 +2,16 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Controllo Robot</title>
+    <link rel="stylesheet" href="static/style.css"> <!-- External CSS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.9.0/nipplejs.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #2c3e50;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        #gamepad {
-            position: relative;
-            width: 400px;
-            height: 400px;
-        }
-
-        /* Joystick Area (Bottom Left) */
-        #joystick {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            width: 150px;
-            height: 150px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-        }
-
-        /* Action Buttons (Right Side) */
-        .action-buttons {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .action-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: none;
-            background: #e74c3c;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Top Buttons (Start/Stop) */
-        .top-buttons {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-        }
-
-        .top-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            background: #3498db;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* Directional Arrows (Optional) */
-        .directional-buttons {
-            position: absolute;
-            bottom: 100px;
-            left: 200px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
-        }
-
-        .dir-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: #7f8c8d;
-            color: white;
-            cursor: pointer;
-        }
-    </style>
-    <script>
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-        
-        function sendCommand(command) {
-            socket.emit('command', command);
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Joystick initialization
-            var joystick = nipplejs.create({
-                zone: document.getElementById('joystick'),
-                mode: 'static',
-                position: { left: '50%', top: '50%' },
-                color: '#3498db',
-                size: 100
-            });
-
-            joystick.on('move', function(evt, data) {
-                var direction = data.direction?.angle || 'stop';
-                if (direction === 'up') sendCommand('avanti');
-                else if (direction === 'down') sendCommand('indietro');
-                else if (direction === 'left') sendCommand('sinistra');
-                else if (direction === 'right') sendCommand('destra');
-            });
-
-            joystick.on('end', function() {
-                sendCommand('stop');
-            });
-        });
-    </script>
 </head>
 <body>
+    <!-- Title -->
+    <h1 class="title">ROBOT CONTROL PANEL</h1>
+
     <div id="gamepad">
         <!-- Top Buttons -->
         <div class="top-buttons">
@@ -152,5 +38,37 @@
             <button class="dir-btn" onclick="sendCommand('down')">↓</button>
         </div>
     </div>
+
+    <!-- JavaScript kept inline in HTML -->
+    <script>
+        const socket = io.connect('http://' + document.domain + ':' + location.port);
+        
+        function sendCommand(command) {
+            socket.emit('command', command);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Joystick initialization
+            const joystick = nipplejs.create({
+                zone: document.getElementById('joystick'),
+                mode: 'static',
+                position: { left: '50%', top: '50%' },
+                color: '#3498db',
+                size: 100
+            });
+
+            joystick.on('move', function(evt, data) {
+                const direction = data.direction?.angle || 'stop';
+                if (direction === 'up') sendCommand('avanti');
+                else if (direction === 'down') sendCommand('indietro');
+                else if (direction === 'left') sendCommand('sinistra');
+                else if (direction === 'right') sendCommand('destra');
+            });
+
+            joystick.on('end', function() {
+                sendCommand('stop');
+            });
+        });
+    </script>
 </body>
 </html>
