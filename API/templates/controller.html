@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controllo Robot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        
+        function sendCommand(command) {
+            socket.emit('command', command);
+        }
+    </script>
+</head>
+<body>
+    <h1>Controllo del Robot</h1>
+    <button onclick="sendCommand('avanti')">Avanti</button>
+    <button onclick="sendCommand('indietro')">Indietro</button>
+</body>
+</html>

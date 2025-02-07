@@ -12,33 +12,27 @@
             <geom type="box" size="0.15 0.3 0.45" rgba="0.9 0.9 0 1"/>
             <inertial pos="0 0 0.07" mass="4.2" diaginertia="0.0329 0.0378 0.0145"/>
 
-
             <!-- Wheels -->
             <!-- Front-Left Wheel -->
             <body pos="0.06 0.405 0.36" euler="90 0 0">
                 <joint name="front_left_wheel" type="hinge" axis="0 0 -1"/>
                 <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
             </body>
-
             <!-- Front-Right Wheel -->
             <body pos="0.06 -0.405 0.36" euler="90 0 0">
                 <joint name="front_right_wheel" type="hinge" axis="0 0 -1"/>
                 <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
             </body>
-
             <!-- Rear-Left Wheel -->
             <body pos="0.06 0.405 -0.36" euler="90 0 0">
                 <joint name="rear_left_wheel" type="hinge" axis="0 0 -1"/>
                 <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
             </body>
-
             <!-- Rear-Right Wheel -->
             <body pos="0.06 -0.405 -0.36" euler="90 0 0">
                 <joint name="rear_right_wheel" type="hinge" axis="0 0 -1"/>
                 <geom type="sphere" size="0.15" rgba="0 0.9 0 1"/>
             </body>
-
-
 
             <!-- SIMULATED Wheels -->
             <!-- S Front-Left Wheel -->
