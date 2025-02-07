@@ -145,7 +145,7 @@ def set_motor_mode(mode):
         GPIO.output(IN6, GPIO.HIGH)
         GPIO.output(IN7, GPIO.LOW)
         GPIO.output(IN8, GPIO.HIGH)
-    elif mode == "traslation_left":
+    elif mode == "translation_left":
         GPIO.output(IN1, GPIO.LOW)
         GPIO.output(IN2, GPIO.HIGH)
         GPIO.output(IN3, GPIO.HIGH)
@@ -154,7 +154,7 @@ def set_motor_mode(mode):
         GPIO.output(IN6, GPIO.LOW)
         GPIO.output(IN7, GPIO.LOW)
         GPIO.output(IN8, GPIO.HIGH)
-    elif mode == "traslation_right":
+    elif mode == "translation_right":
         GPIO.output(IN1, GPIO.HIGH)
         GPIO.output(IN2, GPIO.LOW)
         GPIO.output(IN3, GPIO.LOW)
@@ -197,6 +197,9 @@ def handle_command(command):
         set_motor_speed(50)
         print("Robot va destra - RIGHT")
 
+    elif command == "stop":
+        stop_motors()
+        print("Robot FERMO")
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)
