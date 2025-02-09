@@ -1,12 +1,13 @@
-<div align="center">
+# **Ctrl+Alt+Rover**   <img src="https://github.com/luigimuratore/Fluid_Automation-CONVEYORS/assets/126814136/c104c1e7-fe39-4fee-b0c7-95fbba004564" width="100" >
 
-# **Ctrl+Alt+Rover**
 
 YouTube video: https://www.youtube.com/watch?v=NtzdcXTT0lE
 
 
-  <img src="https://github.com/luigimuratore/Fluid_Automation-CONVEYORS/assets/126814136/c104c1e7-fe39-4fee-b0c7-95fbba004564" width="150" >
 
+<img src="https://github.com/user-attachments/assets/bb571947-9537-4be8-b1b9-f51236d3c7e8" width="200" >
+
+<img src="https://github.com/user-attachments/assets/8aec6359-d8e9-464a-b26d-df6d11f6b411" width="200" >
 
 ### Master's Degree in Mechatronic Engineer
 
