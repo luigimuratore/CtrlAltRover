@@ -20,23 +20,30 @@ YouTube video: https://www.youtube.com/watch?v=NtzdcXTT0lE
 
 
 # Abstract
-We will show you the results of our robotics project we did during this semester.
-
+The extension of the analysis involved the physical construction of a mobile robot to test the Sim-to-Real transfer.
 ----------------------------------
 
 ## IDEA
-Our idea is based on a **5 degrees of freedom anthropomorphic robot manipulator**. We drew inspiration from different online projects.
+The robot was built entirely at home and features the following key components:
 
-Since we did the design part before the main concepts of the robotics course, we mistakenly focused on the aesthetics part more than the technical one.
-So, for example, we chose 5 DOF even if, during the course, we figured out that the **best solution would have been 6 DOF**.
+• Chassis and Wheels: the robot’s structure is a rectangular wooden frame, laser-cut with a Cartesian robot. The wheels are Mecanum wheels, chosen for their omnidirectional capabilities, which allow the vehicle to move in any direction. Both the body and the rollers of the wheels were designed in Autodesk Inventor, 3D-printed in PLA, and assembled. The rover, fully assembled.
 
-This is because a robotic arm with 5 degrees of freedom has some limitations, such as:
-#### • Limited dexterity
-#### • Less versatility
+• Manipulator Arm: a 5-degree-of-freedom manipulator arm is mounted on top of the chassis, further enhancing its functionality.
 
-A secondary problem was that the **wrist we built was not spherical**.
+• Actuation: the robot is powered by four DC motors, controlled using two L298N drivers. A 12V power bank serves as the power source.
 
-Due to these problems, we could use neither some procedures and some approximations treated during the lectures nor the analytic solution of Inverse Kinematics but the numerical one. 
+• Sensors: the robot is equipped with:
+- four ultrasonic sensors for measuring distances, mounted on the four sides of the robot;
+– four infrared sensors mounted under the central body;
+– a camera for potential vision-based tasks;
+– a LiDAR for mapping and obstacle detection.
+
+• Controller: a Raspberry Pi 4b is used to control all its functionalities, such as Python scripts to test each feature independently, ROS2 Humble to handle all sensors and motion control, or to load trained models and test them in real scenarios. The goal of this physical robot is to implement a reinforcement learning algorithm to enable autonomous navigation and autonomous tasks, such as parking. For this purpose, the robot must learn to navigate close to a wall on its right side and park inside the designated parking area.
+
+The initial requirements for this sake are that the robot must be positioned close to the wall and not so far from the parking slot.
+
+
+
 
 ----------------------------------
 
