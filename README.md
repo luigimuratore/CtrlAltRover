@@ -198,12 +198,41 @@ if crash and |distance_right| < safe_distance then
 end if
 
 done ← (current_step ≥ max_steps)
+```
+
+### TESTING
+
+The simplified action space eases policy learning by reducing the number of decisions the agent must consider. However, it also introduces limitations. For instance, if the rover becomes stuck (e.g., in a corner), it cannot recover by translating sideways due to the restricted set of actions.
+
+During testing, it was observed that while the rover often reached the parking area, it sometimes approached the wall too closely or got stuck at the corners. Despite these issues, when not hindered by these failure cases, the rover successfully reached its target position.
+
+The trained model used for testing is stored as `parking.zip`.
 
 
+### Real Rover Performance
+The best-trained model was transferred to the Raspberry Pi environment for testing on the real rover. Although deploying an unstable policy in a real-world setting is generally not recommended, the simplicity of the actions and the non-hazardous nature of the tests allowed for real-world trials.
 
+Key points during real-world testing:
 
+Hardware and Software Challenges:
+Some issues arose due to hardware compatibility and software integration.
+Environmental Discrepancies:
+The simulated environment (scaled larger due to MuJoCo issues) did not perfectly match the real-world setup. For instance, while the rover’s mass was accurately derived from the CAD model, friction was not modeled in simulation because the 3D-printed wheels were coated with a rubber-like material—making it hard to compute an exact friction coefficient.
+Performance:
+Multiple tests were performed with varied initial positions and parking area sizes. Although the rover generally recognized the target parking area, it often failed to enter the slot correctly, sometimes getting stuck near the walls.
 
+### Conclusion and Future Works
+This project explored the challenges and solutions of sim-to-real transfer in reinforcement learning using both a simulated Hopper environment and a custom-built rover. By applying Proximal Policy Optimization (PPO) and Uniform Domain Randomization, the study demonstrated the importance of robust training methods to bridge the gap between simulation and reality.
 
+Key takeaways include:
 
-- **Observation Space:**  
-  The observation is a vector including distances measured by the four ultrasonic sensors. For example:  
+The physical robot showcases the potential of RL in real-world tasks such as autonomous navigation and parking.
+Curriculum learning and a carefully designed reward function enabled incremental learning of complex behaviors.
+The current policy, although promising, suffers from instability and limited recovery options when encountering unfavorable states.
+Future work will focus on:
+
+Expanding the action space to enable more nuanced decision-making and recovery strategies.
+Integrating motor encoder data to improve positional accuracy.
+Utilizing the onboard infrared sensors for smoother navigation.
+Incorporating the front-mounted camera with computer vision algorithms (e.g., object recognition) to assist in various tasks.
+This project underscores the potential of reinforcement learning and sim-to-real transfer in robotics while highlighting areas for further improvement and research.
