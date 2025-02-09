@@ -1,3 +1,10 @@
+flask
+flask-socketio
+eventlet
+gevent gevent-websocket
+flask flask-socketio eventlet
+redis
+
 importlib-metadata==4.13.0
 gym==0.21.0
 stable-baselines3[extra]==1.7.0
