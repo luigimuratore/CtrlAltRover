@@ -176,8 +176,24 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 def index():
     return render_template('controller.html')
 
+
+speed = 50
+
 @socketio.on('command')
-def handle_command(command, speed):
+def handle_command(command):
+    global speed
+    # Check if the command is a speed update
+    if command.startswith("speed:"):
+        try:
+            # Extract and update the speed value
+            new_speed = int(command.split(":")[1])
+            speed = new_speed
+            print(f"Speed updated to: {speed}")
+        except ValueError:
+            print("Invalid speed value received.")
+        return  # Return early; no further processing needed
+
+    # For non-speed commands, print the command with the current speed
     print(f"Ricevuto comando: {command}, with speed: {speed}")
     
     #codice per muovere il robot

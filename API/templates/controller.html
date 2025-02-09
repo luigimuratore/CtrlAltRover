@@ -86,7 +86,7 @@
       document.getElementById('speedValue').innerText = value;
       if (value === last_speed) return;
       last_speed = value;
-      socket.emit('speed:', value);
+      socket.emit('command', 'speed:' + value);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
