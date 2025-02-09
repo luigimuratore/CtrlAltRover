@@ -52,7 +52,7 @@ The extension of the analysis involved the physical construction of a mobile rob
 - **Controller:**  
   A Raspberry Pi 4b is used to control all functionalities—from running Python scripts to test each feature independently to using ROS2 Humble for handling sensors, motion control, and even loading trained models for real-world tests.
 
-![CAD model in Inventor](media/inventor_model.png)  
+<img src="https://github.com/user-attachments/assets/bb571947-9537-4be8-b1b9-f51236d3c7e8" width="200" >
 *Figure: CAD model in Inventor*
 
 The goal of this physical robot is to implement a reinforcement learning algorithm to enable autonomous navigation and tasks such as parking. The robot must learn to navigate close to a wall on its right side and park inside a designated area. The initial requirement is that the robot must be positioned close to the wall and not too far from the parking slot.
@@ -74,10 +74,8 @@ Mecanum wheels allow omnidirectional motion, making them ideal for applications 
 
 This unique capability makes Mecanum wheels ideal for robotics and transfer vehicles where space and omnidirectional motion are critical.
 
-![Rover assembled](media/rover.jpg)  
-*Figure: Rover assembled*
 
-![Mecanum wheels navigation](media/wheels.png)  
+<img src="https://github.com/user-attachments/assets/7db5314b-44ac-4ead-b859-ce8ff8164f63" width="250" >
 *Figure: Mecanum wheels navigation*
 
 ---
@@ -97,15 +95,17 @@ The robot was simulated in the MuJoCo environment to test its behavior. The simu
 
 The simulation is controlled via an XML file (`rover.xml`), which defines the robot's features and environment.
 
-![Rover in MuJoCo environment](media/rover_xml.png)  
+
+
+<img src="https://github.com/user-attachments/assets/50dda0cc-047a-402e-9561-840d371337ee" width="250" >
 *Figure: Rover in MuJoCo environment*
 
 Below are images showing the full simulation environment:
 
-![Initial position in MuJoCo](media/world_xml.png)  
+<img src="https://github.com/user-attachments/assets/5014884e-936f-4dfb-93d4-2a9b04bb644f" width="250" >
 *Figure: Initial position in MuJoCo*
 
-![Target position in MuJoCo](media/park_xml.png)  
+<img src="https://github.com/user-attachments/assets/4f76b070-d651-4efa-8ed5-23cb9df78e8a" width="250" >
 *Figure: Target position in MuJoCo*
 
 The training and testing processes are managed by the scripts `train_rover.py` and `test_rover.py`, respectively.
