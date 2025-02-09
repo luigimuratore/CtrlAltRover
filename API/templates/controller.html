@@ -74,6 +74,7 @@
   <script>
     const socket = io.connect('http://' + document.domain + ':' + location.port);
     let last_action = '';
+    let last_speed = '';
 
     function sendCommand(command) {
       if (command === last_action) return;
@@ -83,7 +84,9 @@
 
     function updateSpeed(value) {
       document.getElementById('speedValue').innerText = value;
-      socket.emit('command', 'speed:' + value);
+      if (value === last_speed) return;
+      last_speed = value;
+      socket.emit('speed:', value);
     }
 
     document.addEventListener('DOMContentLoaded', function() {

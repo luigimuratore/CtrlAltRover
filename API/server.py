@@ -177,32 +177,32 @@ def index():
     return render_template('controller.html')
 
 @socketio.on('command')
-def handle_command(command):
-    print(f"Ricevuto comando: {command}")
+def handle_command(command, speed):
+    print(f"Ricevuto comando: {command}, with speed: {speed}")
     
     #codice per muovere il robot
     if command == "avanti":
         if raspberry:
             set_motor_mode("forward")
-            set_motor_speed(50)
+            set_motor_speed(speed)
         print("Robot va avanti - FORWARD")
 
     elif command == "indietro":
         if raspberry:
             set_motor_mode("backward")
-            set_motor_speed(50)
+            set_motor_speed(speed)
         print("Robot va indietro - BACKWARD")
 
     elif command == "sinistra":
         if raspberry:
             set_motor_mode("translation_left")
-            set_motor_speed(50)
+            set_motor_speed(speed)
         print("Robot va a sinistra - LEFT")
 
     elif command == "destra":
         if raspberry:
             set_motor_mode("translation_right")
-            set_motor_speed(50)
+            set_motor_speed(speed)
         print("Robot va destra - RIGHT")
 
     elif command == "stop":
