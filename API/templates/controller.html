@@ -42,8 +42,12 @@
     <!-- JavaScript kept inline in HTML -->
     <script>
         const socket = io.connect('http://' + document.domain + ':' + location.port);
-        
+        last_action = '';
+
         function sendCommand(command) {
+            // Check if the command is different from the previous one
+            if (command === last_action) return;
+            last_action = command;
             socket.emit('command', command);
         }
 
