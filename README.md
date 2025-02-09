@@ -50,10 +50,11 @@ The extension of the analysis involved the physical construction of a mobile rob
   - A LiDAR for mapping and obstacle detection.
 
 - **Controller:**  
-  A Raspberry Pi 4b is used to control all functionalities—from running Python scripts to test each feature independently to using ROS2 Humble for handling sensors, motion control, and even loading trained models for real-world tests.
+  A Raspberry Pi 4b is used to control all functionalities, from running Python scripts to test each feature independently to using ROS2 Humble for handling sensors, motion control, and even loading trained models for real-world tests.
 
+<div align="center">
 <img src="https://github.com/user-attachments/assets/bb571947-9537-4be8-b1b9-f51236d3c7e8" width="200" >
-*Figure: CAD model in Inventor*
+</div>
 
 The goal of this physical robot is to implement a reinforcement learning algorithm to enable autonomous navigation and tasks such as parking. The robot must learn to navigate close to a wall on its right side and park inside a designated area. The initial requirement is that the robot must be positioned close to the wall and not too far from the parking slot.
 
@@ -102,7 +103,7 @@ The simulation is controlled via an XML file (`rover.xml`), which defines the ro
 Below are images showing the full simulation environment:
 
 <div align="center">
-<img src="https://github.com/user-attachments/assets/5014884e-936f-4dfb-93d4-2a9b04bb644f" width="250" >
+<img src="https://github.com/user-attachments/assets/5014884e-936f-4dfb-93d4-2a9b04bb644f" width="285" >
 
 <img src="https://github.com/user-attachments/assets/4f76b070-d651-4efa-8ed5-23cb9df78e8a" width="250" >
 </div>
@@ -219,7 +220,7 @@ The trained model used for testing is stored as `parking.zip`.
 The best-trained model was transferred to the Raspberry Pi environment for testing on the real rover. Although deploying an unstable policy in a real-world setting is generally not recommended, the simplicity of the actions and the non-hazardous nature of the tests allowed for real-world trials.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/8b12c8fe-c3d5-47ee-9abd-8a146f47e1d0" width="250" >
+  <img src="https://github.com/user-attachments/assets/8b12c8fe-c3d5-47ee-9abd-8a146f47e1d0" width="330" >
   
   <img src="https://github.com/user-attachments/assets/827f0028-3ad1-4366-b9fa-303d37b6705a" width="250" >
 </div>
