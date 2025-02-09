@@ -237,7 +237,7 @@ Multiple tests were performed with varied initial positions and parking area siz
 ----------------------------------
 
 
-### Conclusion and Future Works
+## Conclusion and Future Works
 This project explored the challenges and solutions of sim-to-real transfer in reinforcement learning using both a simulated Hopper environment and a custom-built rover. By applying Proximal Policy Optimization (PPO) and Uniform Domain Randomization, the study demonstrated the importance of robust training methods to bridge the gap between simulation and reality.
 
 Key takeaways include:
@@ -252,3 +252,8 @@ Integrating motor encoder data to improve positional accuracy.
 Utilizing the onboard infrared sensors for smoother navigation.
 Incorporating the front-mounted camera with computer vision algorithms (e.g., object recognition) to assist in various tasks.
 This project underscores the potential of reinforcement learning and sim-to-real transfer in robotics while highlighting areas for further improvement and research.
+
+
+----------------------------------
+
+
