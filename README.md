@@ -76,7 +76,7 @@ Mecanum wheels allow omnidirectional motion, making them ideal for applications 
 This unique capability makes Mecanum wheels ideal for robotics and transfer vehicles where space and omnidirectional motion are critical.
 
 <div align="center">
-<img src="https://github.com/user-attachments/assets/7db5314b-44ac-4ead-b859-ce8ff8164f63" width="250" >
+<img src="https://github.com/user-attachments/assets/3369ff62-d6d7-4eb0-a90a-8e0d2cfab36f" width="250" >
 </div>
 ---
 
