@@ -23,12 +23,6 @@ YouTube video: https://www.youtube.com/watch?v=NtzdcXTT0lE
 </div>
 
 
-# Abstract
-The extension of the analysis involved the physical construction of a mobile robot to test the Sim-to-Real transfer.
-----------------------------------
-
-# Mobile Robot: Sim-to-Real Transfer
-
 ## Description
 
 The extension of the analysis involved the physical construction of a mobile robot to test the Sim-to-Real transfer. The robot was built entirely at home and features the following key components:
