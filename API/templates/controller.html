@@ -1,78 +1,115 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Controllo Robot</title>
-    <link rel="stylesheet" href="static/style.css"> <!-- External CSS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.9.0/nipplejs.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Robot Control Panel</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="static/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.9.0/nipplejs.min.js"></script>
 </head>
 <body>
-    <!-- Title -->
-    <h1 class="title">ROBOT CONTROL PANEL</h1>
-
-    <div id="gamepad">
-        <!-- Top Buttons -->
-        <div class="top-buttons">
-            <button class="top-btn" onclick="sendCommand('start')">Start</button>
-            <button class="top-btn" onclick="sendCommand('emergency')">Emergency</button>
+  <div class="container">
+    <h1 class="text-center title">ROBOT CONTROL PANEL</h1>
+    
+    <div id="gamepad" class="mx-auto">
+      <!-- Row 1: Top Buttons -->
+      <div class="row my-3">
+        <div class="col text-center">
+          <button class="btn btn-primary top-btn" onclick="sendCommand('start')">Start</button>
+          <button class="btn btn-danger top-btn" onclick="sendCommand('emergency')">Emergency</button>
         </div>
-
-        <!-- Joystick Area -->
-        <div id="joystick"></div>
-
-        <!-- Action Buttons (Right Side) -->
-        <div class="action-buttons">
-            <button class="action-btn" onclick="sendCommand('action1')">A</button>
-            <button class="action-btn" onclick="sendCommand('action2')">B</button>
-            <button class="action-btn" onclick="sendCommand('action3')">X</button>
-            <button class="action-btn" onclick="sendCommand('action4')">Y</button>
+      </div>
+      
+    <!-- Row 2: Joystick and Directional Buttons -->
+    <div class="row my-3 align-items-center">
+        <div class="col-md-6 text-center">
+        <div id="joystick" class="joystick"></div>
         </div>
-
-        <!-- Optional Directional Buttons -->
-        <div class="directional-buttons">
-            <button class="dir-btn" onclick="sendCommand('up')">↑</button>
-            <button class="dir-btn" onclick="sendCommand('left')">←</button>
-            <button class="dir-btn" onclick="sendCommand('right')">→</button>
-            <button class="dir-btn" onclick="sendCommand('down')">↓</button>
+        <div class="col-md-6 text-center">
+        <div class="directional-container">
+            <div class="row">
+            <div class="col text-center">
+                <button class="btn btn-secondary dir-btn" onclick="sendCommand('up')">↑</button>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-6 text-left">
+                <button class="btn btn-secondary dir-btn" onclick="sendCommand('left')">←</button>
+            </div>
+            <div class="col-6 text-right">
+                <button class="btn btn-secondary dir-btn" onclick="sendCommand('right')">→</button>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col text-center">
+                <button class="btn btn-secondary dir-btn" onclick="sendCommand('down')">↓</button>
+            </div>
+            </div>
+        </div>
         </div>
     </div>
+  
+      
+      <!-- Row 3: Action Buttons and Speed Slider -->
+      <div class="row my-3">
+        <div class="col-md-6 text-center">
+            <button class="btn btn-warning action-btn" onclick="sendCommand('action1')">A</button>
+            <button class="btn btn-warning action-btn" onclick="sendCommand('action2')">B</button>
+            <button class="btn btn-warning action-btn" onclick="sendCommand('action3')">X</button>
+            <button class="btn btn-warning action-btn" onclick="sendCommand('action4')">Y</button>
+        </div>
+        <div class="col-md-6 text-center">
+          <input type="range" id="speedSlider" min="0" max="100" value="50" class="form-control-range" onchange="updateSpeed(this.value)">
+          <div>Speed: <span id="speedValue">50</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- JavaScript kept inline in HTML -->
-    <script>
-        const socket = io.connect('http://' + document.domain + ':' + location.port);
-        last_action = '';
+  <!-- Inline JavaScript -->
+  <script>
+    const socket = io.connect('http://' + document.domain + ':' + location.port);
+    let last_action = '';
 
-        function sendCommand(command) {
-            // Check if the command is different from the previous one
-            if (command === last_action) return;
-            last_action = command;
-            socket.emit('command', command);
-        }
+    function sendCommand(command) {
+      if (command === last_action) return;
+      last_action = command;
+      socket.emit('command', command);
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Joystick initialization
-            const joystick = nipplejs.create({
-                zone: document.getElementById('joystick'),
-                mode: 'static',
-                position: { left: '50%', top: '50%' },
-                color: '#3498db',
-                size: 100
-            });
+    function updateSpeed(value) {
+      document.getElementById('speedValue').innerText = value;
+      socket.emit('command', 'speed:' + value);
+    }
 
-            joystick.on('move', function(evt, data) {
-                const direction = data.direction?.angle || 'stop';
-                if (direction === 'up') sendCommand('avanti');
-                else if (direction === 'down') sendCommand('indietro');
-                else if (direction === 'left') sendCommand('sinistra');
-                else if (direction === 'right') sendCommand('destra');
-            });
+    document.addEventListener('DOMContentLoaded', function() {
+      const joystick = nipplejs.create({
+        zone: document.getElementById('joystick'),
+        mode: 'static',
+        position: { left: '50%', top: '50%' },
+        color: '#3498db',
+        size: 100
+      });
 
-            joystick.on('end', function() {
-                sendCommand('stop');
-            });
-        });
-    </script>
+      joystick.on('move', function(evt, data) {
+        const direction = data.direction?.angle || 'stop';
+        if (direction === 'up') sendCommand('avanti');
+        else if (direction === 'down') sendCommand('indietro');
+        else if (direction === 'left') sendCommand('sinistra');
+        else if (direction === 'right') sendCommand('destra');
+      });
+
+      joystick.on('end', function() {
+        sendCommand('stop');
+      });
+    });
+  </script>
+  <!-- Bootstrap and jQuery scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+/* Title styling */
 .title {
     position: absolute;
     top: 2vh;
@@ -11,20 +12,17 @@
     z-index: 1;
 }
 
-
+/* Body and container */
 body {
-    background: linear-gradient(to bottom, #2c3e50, #3498db); /* Gradient */
-
+    background: linear-gradient(to bottom, #2c3e50, #3498db);
     margin: 0;
     padding: 0;
-
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
-
-
+  
 #gamepad {
     position: relative;
     width: 90vmin;
@@ -32,116 +30,65 @@ body {
     max-width: 500px;
     max-height: 500px;
 }
-
-/* Joystick Area (Responsive) */
-#joystick {
-    position: absolute;
-    bottom: 5%;
-    left: 5%;
-    width: 25vmin;
-    height: 25vmin;
-    min-width: 100px;
-    min-height: 100px;
+  
+/* Joystick styling */
+.joystick {
+    width: 150px;
+    height: 150px;
+    margin: auto;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 50%;
 }
-
-/* Action Buttons (Responsive) */
-.action-buttons {
-    position: absolute;
-    bottom: 5%;
-    right: 5%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2vmin;
-}
-
-.action-btn {
-    width: 12vmin;
-    height: 12vmin;
-    min-width: 50px;
-    min-height: 50px;
-    border-radius: 50%;
-    border: none;
-    background: #e74c3c;
-    color: white;
-    font-size: 4vmin;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* Top Buttons (Responsive) */
-.top-buttons {
-    position: absolute;
-    top: 8%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 3vmin;
-}
-
+  
+/* Button adjustments */
 .top-btn {
-    padding: 2vmin 4vmin;
-    border: none;
-    border-radius: 3vmin;
-    background: #3498db;
-    color: white;
-    cursor: pointer;
-    font-size: 3vmin;
     min-width: 80px;
+    margin: 0 5px;
 }
-
-/* Directional Arrows (Responsive) */
-.directional-buttons {
-    position: absolute;
-    bottom: 25%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2vmin;
+  
+.action-btn {
+    margin: 5px;
 }
-
+  
 .dir-btn {
-    width: 10vmin;
-    height: 10vmin;
-    min-width: 40px;
-    min-height: 40px;
-    border: none;
-    background: #7f8c8d;
-    color: white;
-    cursor: pointer;
-    font-size: 4vmin;
+    margin: 5px;
 }
 
-/* Mobile Responsive Adjustments */
+/* Ensure the joystick and directional container are vertically centered */
+.row.align-items-center {
+    min-height: 250px;  /* adjust as needed so that the directional container aligns with the joystick */
+}
+  
+/* Styling for the directional container */
+.directional-container {
+    display: inline-block;
+    /* Optionally, set a fixed height/width or padding as needed */
+    width: 100%;
+}
+  
+/* Remove any extra spacing inside directional rows if needed */
+.directional-container .row {
+    margin: 0;
+}
+  
+/* Adjust the directional button styles if needed */
+.dir-btn {
+    margin: 5px;
+    /* You can also adjust padding, font-size, etc. */
+}
+  
+
+ 
+  
+/* Responsive adjustments */
 @media (max-width: 600px) {
     .title {
-        font-size: 6vw;
-        top: 1vh;
+      font-size: 6vw;
+      top: 1vh;
     }
-    
-    .action-btn {
-        font-size: 5vw;
-    }
-    
-    .top-btn {
-        padding: 3vw 6vw;
-        font-size: 4vw;
-    }
-    
+
     .dir-btn {
         font-size: 5vw;
     }
 }
-
-@media (orientation: landscape) {
-    #gamepad {
-        width: 90vmax;
-        height: 90vmax;
-    }
-    
-    .title {
-        font-size: 3vh;
-    }
-}
+  
