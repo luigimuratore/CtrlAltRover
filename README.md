@@ -74,10 +74,9 @@ Mecanum wheels allow omnidirectional motion, making them ideal for applications 
 
 This unique capability makes Mecanum wheels ideal for robotics and transfer vehicles where space and omnidirectional motion are critical.
 
-
+<div align="center">
 <img src="https://github.com/user-attachments/assets/7db5314b-44ac-4ead-b859-ce8ff8164f63" width="250" >
-*Figure: Mecanum wheels navigation*
-
+</div>
 ---
 
 ## Simulation Environment – MuJoCo
@@ -96,17 +95,17 @@ The robot was simulated in the MuJoCo environment to test its behavior. The simu
 The simulation is controlled via an XML file (`rover.xml`), which defines the robot's features and environment.
 
 
-
+<div align="center">
 <img src="https://github.com/user-attachments/assets/50dda0cc-047a-402e-9561-840d371337ee" width="250" >
-*Figure: Rover in MuJoCo environment*
+</div>
 
 Below are images showing the full simulation environment:
 
+<div align="center">
 <img src="https://github.com/user-attachments/assets/5014884e-936f-4dfb-93d4-2a9b04bb644f" width="250" >
-*Figure: Initial position in MuJoCo*
 
 <img src="https://github.com/user-attachments/assets/4f76b070-d651-4efa-8ed5-23cb9df78e8a" width="250" >
-*Figure: Target position in MuJoCo*
+</div>
 
 The training and testing processes are managed by the scripts `train_rover.py` and `test_rover.py`, respectively.
 
@@ -204,7 +203,9 @@ end if
 done ← (current_step ≥ max_steps)
 ```
 
-### TESTING
+----------------------------------
+
+## TESTING
 
 The simplified action space eases policy learning by reducing the number of decisions the agent must consider. However, it also introduces limitations. For instance, if the rover becomes stuck (e.g., in a corner), it cannot recover by translating sideways due to the restricted set of actions.
 
@@ -212,9 +213,16 @@ During testing, it was observed that while the rover often reached the parking a
 
 The trained model used for testing is stored as `parking.zip`.
 
+----------------------------------
 
-### Real Rover Performance
+## Real Rover Performance
 The best-trained model was transferred to the Raspberry Pi environment for testing on the real rover. Although deploying an unstable policy in a real-world setting is generally not recommended, the simplicity of the actions and the non-hazardous nature of the tests allowed for real-world trials.
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/8b12c8fe-c3d5-47ee-9abd-8a146f47e1d0" width="250" >
+  
+  <img src="https://github.com/user-attachments/assets/827f0028-3ad1-4366-b9fa-303d37b6705a" width="250" >
+</div>
 
 Key points during real-world testing:
 
@@ -224,6 +232,9 @@ Environmental Discrepancies:
 The simulated environment (scaled larger due to MuJoCo issues) did not perfectly match the real-world setup. For instance, while the rover’s mass was accurately derived from the CAD model, friction was not modeled in simulation because the 3D-printed wheels were coated with a rubber-like material—making it hard to compute an exact friction coefficient.
 Performance:
 Multiple tests were performed with varied initial positions and parking area sizes. Although the rover generally recognized the target parking area, it often failed to enter the slot correctly, sometimes getting stuck near the walls.
+
+----------------------------------
+
 
 ### Conclusion and Future Works
 This project explored the challenges and solutions of sim-to-real transfer in reinforcement learning using both a simulated Hopper environment and a custom-built rover. By applying Proximal Policy Optimization (PPO) and Uniform Domain Randomization, the study demonstrated the importance of robust training methods to bridge the gap between simulation and reality.
