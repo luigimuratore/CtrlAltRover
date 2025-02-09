@@ -1,36 +1,25 @@
-# CrtlAltRover
+<div align="center">
+
+# **Ctrl+Alt+Rover**
 
 YouTube video: https://www.youtube.com/watch?v=NtzdcXTT0lE
 
-<div align="center">
-  <img src="https://github.com/luigimuratore/Fluid_Automation-CONVEYORS/assets/126814136/c104c1e7-fe39-4fee-b0c7-95fbba004564" width="150" />
+
+  <img src="https://github.com/luigimuratore/Fluid_Automation-CONVEYORS/assets/126814136/c104c1e7-fe39-4fee-b0c7-95fbba004564" width="150" >
 
 
-# Master Degree in Mechatronic Engineer
+### Master's Degree in Mechatronic Engineer
 
-# **Robotics**
+# **Robot Learning**
 
- ## 5DOFs anthropomorphic robot manipulator
-
-</div>
-
-#### Prof.: 	Alessandro Rizzo
-#### TAs: 		David Pangcheng Cen Cheng, Andrea Usai
-----------------------
-##### Muratore Luigi			s333098
-##### Gennero Giorgia		s333099 
-##### Akbarov Iskandar		s329650 
-##### Swaidan Moussa		s334402 
-##### Muhammad Fatir Noshab	s331898
-
-#### 2023/2024
-
+### Muratore Luigi		
+### Gennero Giorgia
 
 --------------------
+</div>
 
-# I’m not a Robotic Arm
-We are:
-Luigi, Giorgia, Iskandar, Moussa, Fatir.
+
+# Abstract
 We will show you the results of our robotics project we did during this semester.
 
 ----------------------------------
