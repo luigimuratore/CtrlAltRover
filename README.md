@@ -249,5 +249,10 @@ This project underscores the potential of reinforcement learning and sim-to-real
 
 
 ----------------------------------
+----------------------------------
+
+# Work in progress
+
+API to control the robot via server:
 
 
