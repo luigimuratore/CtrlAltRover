@@ -255,4 +255,6 @@ This project underscores the potential of reinforcement learning and sim-to-real
 
 API to control the robot via server:
 
-
+<div align="center">
+<img src="https://github.com/user-attachments/assets/5d36e8cd-0a53-47b1-a3dc-7b7b7b9d58ee" width="500"/>
+</div>
