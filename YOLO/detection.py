@@ -2,7 +2,8 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLO model (change the weight file as needed, e.g., yolov8n.pt, yolov8s.pt, etc.)
-model = YOLO("yolov5nu.pt")
+
+model = YOLO("yolo11s-pose.pt")
 
 # Open a connection to your webcam (0 is usually the default camera)
 cap = cv2.VideoCapture(0)
