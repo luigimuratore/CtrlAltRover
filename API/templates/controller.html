@@ -3,71 +3,248 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ctrl+Alt+Rover</title>
+  <title>Ctrl+Alt+Rover & Manipulator</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Your custom CSS -->
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="static/style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.9.0/nipplejs.min.js"></script>
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+    .title {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .joystick {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+    }
+    .control-panel {
+      margin-top: 20px;
+    }
+    .slider-label {
+      font-weight: bold;
+    }
+    .card-header {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .nav-tabs .nav-link.active {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .reset-btn {
+      margin-top: 10px;
+    }
+    .precise-controls {
+      margin-top: 5px;
+    }
+    .precise-controls button {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="text-center title">ROVER CONTROL PANEL</h1>
+    <h1 class="text-center title">CONTROL PANEL</h1>
     
-    <div id="gamepad" class="mx-auto">
-      <!-- Row 1: Top Buttons -->
-      <div class="row my-3">
-        <div class="col text-center">
-          <button class="btn btn-primary top-btn" onclick="sendCommand('start')">Start</button>
-          <button class="btn btn-danger top-btn" onclick="sendCommand('emergency')">Emergency</button>
+    <!-- Nav Tabs -->
+    <ul class="nav nav-tabs justify-content-center" id="controlTabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="rover-tab" data-toggle="tab" href="#rover" role="tab" aria-controls="rover" aria-selected="true">
+          <i class="fas fa-car"></i> Rover
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="manipulator-tab" data-toggle="tab" href="#manipulator" role="tab" aria-controls="manipulator" aria-selected="false">
+          <i class="fas fa-robot"></i> Manipulator
+        </a>
+      </li>
+    </ul>
+
+    <div class="tab-content control-panel" id="controlTabsContent">
+      <!-- Rover Control Tab -->
+      <div class="tab-pane fade show active" id="rover" role="tabpanel" aria-labelledby="rover-tab">
+        <div id="gamepad" class="mx-auto">
+          <!-- Row 1: Top Buttons -->
+          <div class="row my-3">
+            <div class="col text-center">
+              <button class="btn btn-primary top-btn" onclick="sendCommand('start')">Start</button>
+              <button class="btn btn-danger top-btn" onclick="sendCommand('emergency')">Emergency</button>
+            </div>
+          </div>
+          <!-- Row 2: Joystick and Directional Buttons -->
+          <div class="row my-3 align-items-center">
+            <div class="col-md-6 text-center">
+              <div id="joystick" class="joystick"></div>
+            </div>
+            <div class="col-md-6 text-center">
+              <div class="directional-container">
+                <div class="row">
+                  <div class="col text-center">
+                    <button class="btn btn-secondary dir-btn" onclick="sendCommand('up')">
+                      <i class="fas fa-arrow-up"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6 text-left">
+                    <button class="btn btn-secondary dir-btn" onclick="sendCommand('left')">
+                      <i class="fas fa-arrow-left"></i>
+                    </button>
+                  </div>
+                  <div class="col-6 text-right">
+                    <button class="btn btn-secondary dir-btn" onclick="sendCommand('right')">
+                      <i class="fas fa-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col text-center">
+                    <button class="btn btn-secondary dir-btn" onclick="sendCommand('down')">
+                      <i class="fas fa-arrow-down"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Row 3: Action Buttons and Speed Slider -->
+          <div class="row my-3">
+            <div class="col-md-6 text-center">
+              <button class="btn btn-warning action-btn" onclick="sendCommand('action1')">A</button>
+              <button class="btn btn-warning action-btn" onclick="sendCommand('action2')">B</button>
+              <button class="btn btn-warning action-btn" onclick="sendCommand('action3')">X</button>
+              <button class="btn btn-warning action-btn" onclick="sendCommand('action4')">Y</button>
+            </div>
+            <div class="col-md-6 text-center">
+              <input type="range" id="speedSlider" min="0" max="100" value="50" class="form-control-range" onchange="updateSpeed(this.value)">
+              <div>Speed: <span id="speedValue">50</span></div>
+              <!-- Precise speed controls -->
+              <div class="precise-controls">
+                <button class="btn btn-outline-secondary" 
+                        onmousedown="startSpeedAdjust(-1)" 
+                        onmouseup="stopSpeedAdjust()" 
+                        onmouseleave="stopSpeedAdjust()">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button class="btn btn-outline-secondary" 
+                        onmousedown="startSpeedAdjust(1)" 
+                        onmouseup="stopSpeedAdjust()" 
+                        onmouseleave="stopSpeedAdjust()">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      
-    <!-- Row 2: Joystick and Directional Buttons -->
-    <div class="row my-3 align-items-center">
-        <div class="col-md-6 text-center">
-        <div id="joystick" class="joystick"></div>
-        </div>
-        <div class="col-md-6 text-center">
-        <div class="directional-container">
+
+      <!-- Manipulator Arm Control Tab -->
+      <div class="tab-pane fade" id="manipulator" role="tabpanel" aria-labelledby="manipulator-tab">
+        <div class="card">
+          <div class="card-header text-center">
+            <h3>Manipulator Arm Control</h3>
+          </div>
+          <div class="card-body">
             <div class="row">
-            <div class="col text-center">
-                <button class="btn btn-secondary dir-btn" onclick="sendCommand('up')">↑</button>
+              <!-- Servo 1 -->
+              <div class="col-md-2 text-center">
+                <label class="slider-label" for="servo1Slider">Servo 1</label>
+                <input type="range" id="servo1Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo1', this.value)">
+                <div>Angle: <span id="servo1Value">90</span>°</div>
+                <div class="precise-controls">
+                  <button class="btn btn-outline-secondary" 
+                          onmousedown="startServoAdjust('servo1', -1)" 
+                          onmouseup="stopServoAdjust()" 
+                          onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-left"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" 
+                          onmousedown="startServoAdjust('servo1', 1)" 
+                          onmouseup="stopServoAdjust()" 
+                          onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- Servo 2 -->
+              <div class="col-md-2 text-center">
+                <label class="slider-label" for="servo2Slider">Servo 2</label>
+                <input type="range" id="servo2Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo2', this.value)">
+                <div>Angle: <span id="servo2Value">90</span>°</div>
+                <div class="precise-controls">
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo2', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-left"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo2', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- Servo 3 -->
+              <div class="col-md-2 text-center">
+                <label class="slider-label" for="servo3Slider">Servo 3</label>
+                <input type="range" id="servo3Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo3', this.value)">
+                <div>Angle: <span id="servo3Value">90</span>°</div>
+                <div class="precise-controls">
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo3', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-left"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo3', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- Servo 4 -->
+              <div class="col-md-2 text-center">
+                <label class="slider-label" for="servo4Slider">Servo 4</label>
+                <input type="range" id="servo4Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo4', this.value)">
+                <div>Angle: <span id="servo4Value">90</span>°</div>
+                <div class="precise-controls">
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo4', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-left"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo4', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- Servo 5 -->
+              <div class="col-md-2 text-center">
+                <label class="slider-label" for="servo5Slider">Servo 5</label>
+                <input type="range" id="servo5Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo5', this.value)">
+                <div>Angle: <span id="servo5Value">90</span>°</div>
+                <div class="precise-controls">
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo5', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-left"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo5', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
             </div>
+            <div class="row mt-3">
+              <div class="col text-center">
+                <button class="btn btn-outline-primary reset-btn" onclick="resetArm()">
+                  <i class="fas fa-sync-alt"></i> Reset Arm
+                </button>
+              </div>
             </div>
-            <div class="row">
-            <div class="col-6 text-left">
-                <button class="btn btn-secondary dir-btn" onclick="sendCommand('left')">←</button>
-            </div>
-            <div class="col-6 text-right">
-                <button class="btn btn-secondary dir-btn" onclick="sendCommand('right')">→</button>
-            </div>
-            </div>
-            <div class="row">
-            <div class="col text-center">
-                <button class="btn btn-secondary dir-btn" onclick="sendCommand('down')">↓</button>
-            </div>
-            </div>
-        </div>
-        </div>
-    </div>
-  
-      
-      <!-- Row 3: Action Buttons and Speed Slider -->
-      <div class="row my-3">
-        <div class="col-md-6 text-center">
-            <button class="btn btn-warning action-btn" onclick="sendCommand('action1')">A</button>
-            <button class="btn btn-warning action-btn" onclick="sendCommand('action2')">B</button>
-            <button class="btn btn-warning action-btn" onclick="sendCommand('action3')">X</button>
-            <button class="btn btn-warning action-btn" onclick="sendCommand('action4')">Y</button>
-        </div>
-        <div class="col-md-6 text-center">
-          <input type="range" id="speedSlider" min="0" max="100" value="50" class="form-control-range" onchange="updateSpeed(this.value)">
-          <div>Speed: <span id="speedValue">50</span></div>
+          </div>
         </div>
       </div>
-    </div>
+    </div> <!-- End Tab Content -->
   </div>
 
   <!-- Inline JavaScript -->
@@ -75,18 +252,78 @@
     const socket = io.connect('http://' + document.domain + ':' + location.port);
     let last_action = '';
     let last_speed = '';
+    let servoInterval = null;
+    let speedInterval = null;
 
     function sendCommand(command) {
-      if (command === last_action) return;
-      last_action = command;
       socket.emit('command', command);
     }
 
     function updateSpeed(value) {
       document.getElementById('speedValue').innerText = value;
-      if (value === last_speed) return;
-      last_speed = value;
       socket.emit('command', 'speed:' + value);
+    }
+
+    function updateServo(servo, angle) {
+      document.getElementById(servo + 'Value').innerText = angle;
+      // Also update the slider control itself
+      document.getElementById(servo + 'Slider').value = angle;
+      socket.emit('command', servo + ':' + angle);
+    }
+
+    // Continuous servo adjustment: servo = "servo1", delta = 1 or -1
+    function startServoAdjust(servo, delta) {
+      // Immediately update once
+      adjustServo(servo, delta);
+      // Then set an interval for continuous adjustment
+      servoInterval = setInterval(() => {
+        adjustServo(servo, delta);
+      }, 100); // adjust every 100ms
+    }
+
+    function adjustServo(servo, delta) {
+      let slider = document.getElementById(servo + 'Slider');
+      let currentVal = parseInt(slider.value);
+      let newVal = currentVal + delta;
+      if(newVal < parseInt(slider.min)) newVal = parseInt(slider.min);
+      if(newVal > parseInt(slider.max)) newVal = parseInt(slider.max);
+      updateServo(servo, newVal);
+    }
+
+    function stopServoAdjust() {
+      clearInterval(servoInterval);
+    }
+
+    // Continuous speed adjustment
+    function startSpeedAdjust(delta) {
+      adjustSpeed(delta);
+      speedInterval = setInterval(() => {
+        adjustSpeed(delta);
+      }, 100);
+    }
+
+    function adjustSpeed(delta) {
+      let slider = document.getElementById('speedSlider');
+      let currentVal = parseInt(slider.value);
+      let newVal = currentVal + delta;
+      if(newVal < parseInt(slider.min)) newVal = parseInt(slider.min);
+      if(newVal > parseInt(slider.max)) newVal = parseInt(slider.max);
+      slider.value = newVal;
+      document.getElementById('speedValue').innerText = newVal;
+      socket.emit('command', 'speed:' + newVal);
+    }
+
+    function stopSpeedAdjust() {
+      clearInterval(speedInterval);
+    }
+
+    // Reset arm: set all servo sliders to default (90)
+    function resetArm() {
+      const servos = ['servo1','servo2','servo3','servo4','servo5'];
+      servos.forEach(servo => {
+        updateServo(servo, 90);
+      });
+      sendCommand('reset_arm');
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -95,7 +332,7 @@
         mode: 'static',
         position: { left: '50%', top: '50%' },
         color: '#3498db',
-        size: 100
+        size: 150
       });
 
       joystick.on('move', function(evt, data) {
