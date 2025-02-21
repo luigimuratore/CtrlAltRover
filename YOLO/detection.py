@@ -16,7 +16,7 @@ while True:
     # Capture frame-by-frame
     ret, frame = cap.read()
     if not ret:
-        print("Failed to grab frame")
+        print("Failed to grab frame") 
         break
 
     # Run YOLO inference on the current frame
