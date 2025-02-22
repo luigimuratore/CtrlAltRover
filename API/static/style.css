@@ -1,6 +1,6 @@
 /* Title styling */
 .title {
-    position: absolute;
+    position: fixed;
     top: 2vh;
     left: 50%;
     transform: translateX(-50%);
