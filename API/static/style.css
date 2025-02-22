@@ -10,6 +10,9 @@
     font-size: 4vw;
     margin: 0;
     z-index: 1;
+
+    font-weight: bold;
+
 }
 
 /* Body and container */
@@ -77,6 +80,50 @@ body {
     /* You can also adjust padding, font-size, etc. */
 }
   
+
+.control-panel {
+    margin-top: 20px;
+}
+
+.slider-label {
+    font-weight: bold;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.reset-btn {
+    margin-top: 10px;
+}
+
+.precise-controls {
+    margin-top: 5px;
+}
+
+.precise-controls button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    font-size: 16px;
+}
+
+
+  
+
+/* Centers the servo image, adds a small bottom margin, and sets a default width */
+.servo-image {
+    display: block;
+    margin: 0 auto 5px auto;
+    width: 5vw; 
+}
+
 
  
   
