@@ -3,7 +3,7 @@ import serial
 import time
 
 # Set the serial port and baud rate (match the Arduino's Serial.begin value)
-SERIAL_PORT = '/dev/ttyACM0'  # Change this if your Arduino is on a different port
+SERIAL_PORT = '/dev/ttyUSB0'  # Change this if your Arduino is on a different port
 BAUD_RATE = 9600
 
 def main():
