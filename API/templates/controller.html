@@ -106,30 +106,33 @@
               </div>
             </div>
           </div>
-          <!-- New Row: Sensor Measurements Window -->
+          <!-- Row 4: Display Panels -->
           <div class="row my-3">
-            <div class="col">
+            <div class="col-md-6">
               <div id="sensorMeasurements" class="alert alert-info" role="alert">
-                Sensor data will appear here...
+                Sensor measurements will appear here...
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div id="motorStatus" class="alert alert-secondary" role="alert">
+                Motor status messages will appear here...
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Manipulator Arm Control Tab -->
+      <!-- Manipulator Control Tab (unchanged) -->
       <div class="tab-pane fade" id="manipulator" role="tabpanel" aria-labelledby="manipulator-tab">
         <div class="card">
           <div class="card-header text-center">
             <h3>Manipulator Arm Control</h3>
           </div>
           <div class="card-body">
-            <!-- (Manipulator controls remain unchanged) -->
-            <!-- ... -->
+            <!-- (Manipulator controls go here) -->
           </div>
         </div>
       </div>
-
     </div> <!-- End Tab Content -->
   </div>
 
@@ -165,8 +168,8 @@
       let slider = document.getElementById(servo + 'Slider');
       let currentVal = parseInt(slider.value);
       let newVal = currentVal + delta;
-      if(newVal < parseInt(slider.min)) newVal = parseInt(slider.min);
-      if(newVal > parseInt(slider.max)) newVal = parseInt(slider.max);
+      if (newVal < parseInt(slider.min)) newVal = parseInt(slider.min);
+      if (newVal > parseInt(slider.max)) newVal = parseInt(slider.max);
       updateServo(servo, newVal);
     }
 
@@ -185,8 +188,8 @@
       let slider = document.getElementById('speedSlider');
       let currentVal = parseInt(slider.value);
       let newVal = currentVal + delta;
-      if(newVal < parseInt(slider.min)) newVal = parseInt(slider.min);
-      if(newVal > parseInt(slider.max)) newVal = parseInt(slider.max);
+      if (newVal < parseInt(slider.min)) newVal = parseInt(slider.min);
+      if (newVal > parseInt(slider.max)) newVal = parseInt(slider.max);
       slider.value = newVal;
       document.getElementById('speedValue').innerText = newVal;
       socket.emit('command', 'speed:' + newVal);
@@ -204,10 +207,18 @@
       sendCommand('reset_arm');
     }
 
-    // Listen for sensor data responses from the server
+    // SocketIO listener for Arduino responses.
     socket.on('arduino_response', function(data) {
-      // Update the sensor measurements window with the new data
-      document.getElementById("sensorMeasurements").innerText = data.data;
+      let msg = data.data;
+      // Check if the message is a sensor measurement (assuming Arduino prefixes sensor messages with "SENSOR:")
+      if (msg.indexOf("SENSOR:") === 0) {
+        document.getElementById("sensorMeasurements").innerText = msg.replace("SENSOR:", "").trim();
+      } 
+      // Otherwise, if it appears to be a motor status update (e.g. "Moving", "Turning", or "Emergency"), update motorStatus.
+      else if (msg.indexOf("Moving") !== -1 || msg.indexOf("Turning") !== -1 || msg.indexOf("Emergency") !== -1) {
+        document.getElementById("motorStatus").innerText = msg;
+      }
+      // If you need to handle other kinds of messages, you can add more conditions here.
     });
 
     document.addEventListener('DOMContentLoaded', function() {
