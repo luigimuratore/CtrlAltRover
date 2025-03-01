@@ -7,13 +7,15 @@ import threading
 
 # Configure serial connection to Arduino Mega
 arduino_port = '/dev/arduinoMega'  # Adjust if needed
-baud_rate = 9600
+baud_rate = 115200
 try:
     ser = serial.Serial(arduino_port, baud_rate, timeout=1)
 except Exception as e:
     print(f"Error opening serial port: {e}")
     exit(1)
 time.sleep(2)  # Allow Arduino to reset
+ser.reset_input_buffer()  # Flush any residual data
+
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -48,7 +50,7 @@ def serial_read_thread():
     while True:
         if ser.in_waiting:
             try:
-                line = ser.readline().decode('utf-8').strip()
+                line = ser.readline().decode('utf-8', errors='replace').strip()
                 if line:
                     print("Arduino:", line)
                     # Emit Arduino response to all connected clients
