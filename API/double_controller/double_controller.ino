@@ -14,8 +14,8 @@ const int IN5_PIN   = 49;
 const int IN6_PIN   = 47;
 
 const int PWM_END = 10;   // Motor 4 PWM
-const int IN7_PIN   = 39;
-const int IN8_PIN   = 41;
+const int IN7_PIN   = 41;
+const int IN8_PIN   = 39;
 
 int currentSpeed = 50; // Default speed (percentage 0-100)
 
