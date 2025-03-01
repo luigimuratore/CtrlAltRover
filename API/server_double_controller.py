@@ -6,7 +6,7 @@ import time
 import threading
 
 # Configure serial connection to Arduino Mega
-arduino_port = '/dev/ttyUSB1'  # Adjust if needed
+arduino_port = '/dev/arduinoMega'  # Adjust if needed
 baud_rate = 9600
 try:
     ser = serial.Serial(arduino_port, baud_rate, timeout=1)
