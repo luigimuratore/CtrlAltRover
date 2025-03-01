@@ -1,3 +1,12 @@
+# START
+ssh -Y []@[].local
+
+source rover/bin/activate
+
+cd CrtlAltRover/
+git pull origin main
+
+
 --------------------------------------------------
 # YOLO 
 
