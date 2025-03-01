@@ -103,7 +103,7 @@ void setMotorMode(String mode) {
 }
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   // Initialize motor pins
   pinMode(PWM_ENA, OUTPUT);
@@ -133,6 +133,7 @@ void setup() {
   Serial.println("Arduino Mega ready. Awaiting commands...");
 }
 
+
 void loop() {
   if (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
@@ -140,7 +141,6 @@ void loop() {
     Serial.print("Received: ");
     Serial.println(command);
     
-    // Update speed command (e.g., "speed:60")
     if (command.startsWith("speed:")) {
       int newSpeed = command.substring(6).toInt();
       currentSpeed = newSpeed;
@@ -149,7 +149,7 @@ void loop() {
       return;
     }
     
-    // Sensor measurement commands:
+    // Only measure sensor when sensor commands are received
     if (command == "up") {
       long dist = measureDistance(TRIG_UP, ECHO_UP);
       Serial.print("SENSOR: Up sensor distance: ");
@@ -174,7 +174,6 @@ void loop() {
       Serial.print(dist);
       Serial.println(" cm");
     }
-    // Motor control commands:
     else if (command == "avanti") {
       setMotorMode("forward");
       setMotorSpeed(currentSpeed);
@@ -195,8 +194,11 @@ void loop() {
       setMotorSpeed(currentSpeed);
       Serial.println("Turning right");
     }
-    // Emergency command stops motors
-    else if (command == "stop" || command == "emergency") {
+    else if (command == "stop") {
+      stopMotors();
+      Serial.println("Stop: Motors stopped");
+    }
+    else if (command == "emergency") {
       stopMotors();
       Serial.println("EMERGENCY STOP: Motors stopped");
     }
