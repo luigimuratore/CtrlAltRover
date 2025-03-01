@@ -1,3 +1,9 @@
+# USB
+/dev/ttyUSB0 -> arduino
+/dev/ttyUSB1 -> LiDAR
+
+
+--------------------------------------------------
 # START
 ssh -Y []@[].local
 
