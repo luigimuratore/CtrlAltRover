@@ -103,7 +103,7 @@ void setMotorMode(String mode) {
 }
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   
   // Initialize motor pins
   pinMode(PWM_ENA, OUTPUT);
