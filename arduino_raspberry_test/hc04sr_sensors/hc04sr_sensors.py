@@ -5,7 +5,7 @@ import sys
 import select
 
 # Adjust the serial port name as needed (e.g., '/dev/ttyACM0' or '/dev/ttyUSB0')
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 time.sleep(2)  # Allow Arduino time to reset
 
 print("Raspberry Pi - Arduino Sensor Reader")
