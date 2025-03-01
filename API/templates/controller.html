@@ -172,52 +172,28 @@
                 </div>
               </div>
 
-              <!-- Servo 4 -->
+              <!-- Servo 4 (Micro Servo) -->
               <div class="col-md-2 text-center">
                 <label class="slider-label" for="servo4Slider">Servo 4</label>
                 <img src="static/robot.png" alt="Servo 4" class="servo-image">
-                <input type="range" id="servo4Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo4', this.value)">
-                <div>Angle: <span id="servo4Value">90</span>°</div>
-                <div class="precise-controls">
-                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo4', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
-                    <i class="fas fa-arrow-left"></i>
-                  </button>
-                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo4', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
-                    <i class="fas fa-arrow-right"></i>
-                  </button>
-                </div>
+                <input type="range" id="servo4Slider" min="0" max="180" value="180" class="form-control-range" onchange="updateServo('servo4', this.value)">
+                <div>Angle: <span id="servo4Value">180</span>°</div>
               </div>
 
-              <!-- Servo 5 -->
+              <!-- Servo 5 (Micro Servo) -->
               <div class="col-md-2 text-center">
                 <label class="slider-label" for="servo5Slider">Servo 5</label>
                 <img src="static/robot.png" alt="Servo 5" class="servo-image">
-                <input type="range" id="servo5Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo5', this.value)">
-                <div>Angle: <span id="servo5Value">90</span>°</div>
-                <div class="precise-controls">
-                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo5', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
-                    <i class="fas fa-arrow-left"></i>
-                  </button>
-                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo5', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
-                    <i class="fas fa-arrow-right"></i>
-                  </button>
-                </div>
+                <input type="range" id="servo5Slider" min="0" max="180" value="137" class="form-control-range" onchange="updateServo('servo5', this.value)">
+                <div>Angle: <span id="servo5Value">137</span>°</div>
               </div>
 
-              <!-- Servo 6 -->
+              <!-- Servo 6 (Micro Servo) -->
               <div class="col-md-2 text-center">
                 <label class="slider-label" for="servo6Slider">Servo 6</label>
                 <img src="static/robot.png" alt="Servo 6" class="servo-image">
-                <input type="range" id="servo6Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo6', this.value)">
-                <div>Angle: <span id="servo6Value">90</span>°</div>
-                <div class="precise-controls">
-                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo6', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
-                    <i class="fas fa-arrow-left"></i>
-                  </button>
-                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo6', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
-                    <i class="fas fa-arrow-right"></i>
-                  </button>
-                </div>
+                <input type="range" id="servo6Slider" min="0" max="180" value="100" class="form-control-range" onchange="updateServo('servo6', this.value)">
+                <div>Angle: <span id="servo6Value">100</span>°</div>
               </div>
             </div>
             <div class="row mt-3">
@@ -255,7 +231,7 @@
       socket.emit('command', servo + ':' + angle);
     }
 
-    // Continuous servo adjustment
+    // Continuous servo adjustment for continuous rotation servos (servo1-3)
     function startServoAdjust(servo, delta) {
       adjustServo(servo, delta);
       servoInterval = setInterval(() => { adjustServo(servo, delta); }, 100);
@@ -295,19 +271,23 @@
       clearInterval(speedInterval);
     }
 
-    // Reset arm: set all servo sliders to default (90)
+    // Reset arm: set continuous servos to neutral (90) and micro servos to default positions
     function resetArm() {
-      const servos = ['servo1','servo2','servo3','servo4','servo5','servo6'];
-      servos.forEach(servo => {
+      const continuousServos = ['servo1','servo2','servo3'];
+      continuousServos.forEach(servo => {
         updateServo(servo, 90);
       });
+      // Reset micro servos (using your default values)
+      updateServo('servo4', 180);
+      updateServo('servo5', 137);
+      updateServo('servo6', 100);
       sendCommand('reset_arm');
     }
 
     // Listen for messages from the server
     socket.on('arduino_response', function(data) {
       let msg = data.data;
-      // Update the correct panel based on prefix.
+      // Update panels based on prefix
       if (msg.indexOf("SENSOR:") === 0) {
         document.getElementById("sensorMeasurements").innerText = msg.replace("SENSOR:", "").trim();
       } else if (msg.indexOf("STATUS:") === 0) {

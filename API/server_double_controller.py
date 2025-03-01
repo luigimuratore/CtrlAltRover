@@ -5,7 +5,7 @@ import serial
 import time
 import threading
 
-# Configure serial connection using persistent symlink from your udev rule
+# Configure serial connection using persistent symlink
 arduino_port = '/dev/arduinoMega'
 baud_rate = 115200
 try:
@@ -28,7 +28,6 @@ speed = 50
 @socketio.on('command')
 def handle_command(command):
     global speed
-    # Speed update command
     if command.startswith("speed:"):
         try:
             new_speed = int(command.split(":")[1])
@@ -38,7 +37,6 @@ def handle_command(command):
         except ValueError:
             print("Invalid speed value received.")
         return
-
     print(f"Received command: {command} with speed: {speed}")
     ser.write((command + "\n").encode())
     print(f"Command '{command}' sent to Arduino.")
