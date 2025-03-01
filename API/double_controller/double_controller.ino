@@ -1,25 +1,56 @@
 #include <Arduino.h>
 
-// Define motor control pins (example assignments; adjust to match your wiring)
+// ---------------- Motor Control Pins ----------------
 const int PWM_ENA = 13;   // Motor 1 PWM
-const int IN1_PIN = 51; // Motor 1 direction
-const int IN2_PIN = 53;
+const int IN1_PIN   = 51; // Motor 1 direction
+const int IN2_PIN   = 53;
 
 const int PWM_ENB = 11;   // Motor 2 PWM
-const int IN3_PIN = 45;
-const int IN4_PIN = 43;
+const int IN3_PIN   = 45;
+const int IN4_PIN   = 43;
 
 const int PWM_ENC = 12;   // Motor 3 PWM
-const int IN5_PIN = 49;
-const int IN6_PIN = 47;
+const int IN5_PIN   = 49;
+const int IN6_PIN   = 47;
 
 const int PWM_END = 10;   // Motor 4 PWM
-const int IN7_PIN = 39;
-const int IN8_PIN = 41;
+const int IN7_PIN   = 39;
+const int IN8_PIN   = 41;
 
-int currentSpeed = 50; // default speed percentage (0 to 100)
+int currentSpeed = 50; // Default speed (percentage 0-100)
 
-// Stop all motors and set PWM outputs to 0
+// ---------------- HC-SR04 Sensor Pins ----------------
+// "up" sensor (front)
+const int TRIG_UP = 35;
+const int ECHO_UP = 37;
+// "down" sensor (rear)
+const int TRIG_DOWN = 29;
+const int ECHO_DOWN = 27;
+// "left" sensor
+const int TRIG_LEFT = 33;
+const int ECHO_LEFT = 31;
+// "right" sensor
+const int TRIG_RIGHT = 25;
+const int ECHO_RIGHT = 23;
+
+// ---------------- Utility Functions ----------------
+
+// Function to measure distance (in centimeters) with an HC-SR04 sensor.
+long measureDistance(int trigPin, int echoPin) {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  // Read the duration of the echo pulse (timeout 30ms)
+  long duration = pulseIn(echoPin, HIGH, 30000);
+  // Convert time (microseconds) to distance (cm)
+  long distance = duration * 0.0343 / 2;
+  return distance;
+}
+
+// Stop all motors and set PWM outputs to 0.
 void stopMotors() {
   digitalWrite(IN1_PIN, LOW);
   digitalWrite(IN2_PIN, LOW);
@@ -29,14 +60,14 @@ void stopMotors() {
   digitalWrite(IN6_PIN, LOW);
   digitalWrite(IN7_PIN, LOW);
   digitalWrite(IN8_PIN, LOW);
-
+  
   analogWrite(PWM_ENA, 0);
   analogWrite(PWM_ENB, 0);
   analogWrite(PWM_ENC, 0);
   analogWrite(PWM_END, 0);
 }
 
-// Set speed for all motors (speed is percentage 0-100, converted to PWM 0-255)
+// Set speed for all motors (converts 0-100 percentage to 0-255 PWM).
 void setMotorSpeed(int speed) {
   int pwmValue = map(speed, 0, 100, 0, 255);
   analogWrite(PWM_ENA, pwmValue);
@@ -45,10 +76,10 @@ void setMotorSpeed(int speed) {
   analogWrite(PWM_END, pwmValue);
 }
 
-// Set motor directions based on desired mode
+// Set motor directions based on the desired movement mode.
 void setMotorMode(String mode) {
-  stopMotors(); // Ensure motors are stopped before changing directions
-
+  stopMotors(); // Stop motors before changing directions
+  
   if (mode == "forward") {
     digitalWrite(IN1_PIN, HIGH); digitalWrite(IN2_PIN, LOW);
     digitalWrite(IN3_PIN, HIGH); digitalWrite(IN4_PIN, LOW);
@@ -75,7 +106,7 @@ void setMotorMode(String mode) {
 void setup() {
   Serial.begin(9600);
   
-  // Initialize motor pins
+  // ---------------- Initialize Motor Pins ----------------
   pinMode(PWM_ENA, OUTPUT);
   pinMode(IN1_PIN, OUTPUT);
   pinMode(IN2_PIN, OUTPUT);
@@ -92,6 +123,19 @@ void setup() {
   pinMode(IN7_PIN, OUTPUT);
   pinMode(IN8_PIN, OUTPUT);
   
+  // ---------------- Initialize Sensor Pins ----------------
+  pinMode(TRIG_UP, OUTPUT);
+  pinMode(ECHO_UP, INPUT);
+  
+  pinMode(TRIG_DOWN, OUTPUT);
+  pinMode(ECHO_DOWN, INPUT);
+  
+  pinMode(TRIG_LEFT, OUTPUT);
+  pinMode(ECHO_LEFT, INPUT);
+  
+  pinMode(TRIG_RIGHT, OUTPUT);
+  pinMode(ECHO_RIGHT, INPUT);
+  
   stopMotors();
   Serial.println("Arduino Mega ready. Awaiting commands...");
 }
@@ -103,35 +147,65 @@ void loop() {
     Serial.print("Received: ");
     Serial.println(command);
     
-    // If command is a speed update, e.g. "speed:60"
+    // Process speed update commands, e.g., "speed:60"
     if (command.startsWith("speed:")) {
       int newSpeed = command.substring(6).toInt();
       currentSpeed = newSpeed;
       Serial.print("Speed updated to: ");
       Serial.println(currentSpeed);
-      return; // exit early after updating speed
+      return;
     }
     
-    // Process movement commands
-    if (command == "avanti") {
+    // Process sensor measurement commands
+    if (command == "up") {
+      long dist = measureDistance(TRIG_UP, ECHO_UP);
+      Serial.print("Up sensor distance: ");
+      Serial.print(dist);
+      Serial.println(" cm");
+    }
+    else if (command == "down") {
+      long dist = measureDistance(TRIG_DOWN, ECHO_DOWN);
+      Serial.print("Down sensor distance: ");
+      Serial.print(dist);
+      Serial.println(" cm");
+    }
+    else if (command == "left") {
+      long dist = measureDistance(TRIG_LEFT, ECHO_LEFT);
+      Serial.print("Left sensor distance: ");
+      Serial.print(dist);
+      Serial.println(" cm");
+    }
+    else if (command == "right") {
+      long dist = measureDistance(TRIG_RIGHT, ECHO_RIGHT);
+      Serial.print("Right sensor distance: ");
+      Serial.print(dist);
+      Serial.println(" cm");
+    }
+    // Process motor control commands
+    else if (command == "avanti") {
       setMotorMode("forward");
       setMotorSpeed(currentSpeed);
       Serial.println("Moving forward");
-    } else if (command == "indietro") {
+    }
+    else if (command == "indietro") {
       setMotorMode("backward");
       setMotorSpeed(currentSpeed);
       Serial.println("Moving backward");
-    } else if (command == "sinistra") {
+    }
+    else if (command == "sinistra") {
       setMotorMode("translation_left");
       setMotorSpeed(currentSpeed);
       Serial.println("Turning left");
-    } else if (command == "destra") {
+    }
+    else if (command == "destra") {
       setMotorMode("translation_right");
       setMotorSpeed(currentSpeed);
       Serial.println("Turning right");
-    } else if (command == "stop") {
+    }
+    // Emergency stop command stops motors immediately.
+    else if (command == "stop" || command == "emergency") {
       stopMotors();
-      Serial.println("Stopping");
+      Serial.println("Emergency stop: Motors stopped");
     }
   }
 }

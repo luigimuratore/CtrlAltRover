@@ -3,9 +3,10 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO
 import serial
 import time
+import threading
 
 # Configure serial connection to Arduino Mega
-arduino_port = '/dev/ttyUSB0'  # adjust if needed
+arduino_port = '/dev/ttyUSB0'  # Adjust if needed
 baud_rate = 9600
 try:
     ser = serial.Serial(arduino_port, baud_rate, timeout=1)
@@ -31,7 +32,6 @@ def handle_command(command):
         try:
             new_speed = int(command.split(":")[1])
             speed = new_speed
-            # Send the speed update command to Arduino
             ser.write((command + "\n").encode())
             print(f"Speed updated to: {speed}")
         except ValueError:
@@ -43,5 +43,24 @@ def handle_command(command):
     ser.write((command + "\n").encode())
     print(f"Command '{command}' sent to Arduino.")
 
+def serial_read_thread():
+    """Continuously read from the Arduino and emit responses to web clients."""
+    while True:
+        if ser.in_waiting:
+            try:
+                line = ser.readline().decode('utf-8').strip()
+                if line:
+                    print("Arduino:", line)
+                    # Emit Arduino response to all connected clients
+                    socketio.emit('arduino_response', {'data': line})
+            except Exception as e:
+                print("Error reading from serial:", e)
+        time.sleep(0.1)
+
 if __name__ == '__main__':
+    # Start the serial reading thread
+    thread = threading.Thread(target=serial_read_thread, daemon=True)
+    thread.start()
+    
+    # Run the Flask/SocketIO app
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)
