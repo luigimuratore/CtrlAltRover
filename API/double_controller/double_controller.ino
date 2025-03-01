@@ -163,9 +163,9 @@ void setup() {
   servo1.write(90);
   servo2.write(90);
   servo3.write(90);
-  servo4.write(90);
-  servo5.write(90);
-  servo6.write(90);
+  servo4.write(180);
+  servo5.write(137);
+  servo6.write(100);
   
   stopMotors();
   Serial.println("STATUS: Arduino Mega ready. Awaiting commands...");
