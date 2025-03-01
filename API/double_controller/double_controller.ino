@@ -18,7 +18,7 @@ const int PWM_END = 10;   // Motor 4 PWM
 const int IN7_PIN   = 41;
 const int IN8_PIN   = 39;
 
-int currentSpeed = 50; // Default speed (0-100%)
+int currentSpeed = 50; // Default speed (percentage 0-100%)
 
 // ---------------- HC-SR04 Sensor Pins ----------------
 // "up" sensor (front)
@@ -35,26 +35,43 @@ const int TRIG_RIGHT = 23;
 const int ECHO_RIGHT = 25;
 
 // ---------------- Servo Pins ----------------
+// Continuous rotation servos (positional control not possible)
 // Servo 1: PWM pin 7
 // Servo 2: PWM pin 6
 // Servo 3: PWM pin 5
-// Servo 4: PWM pin 4
-// Servo 5: PWM pin 3
-// Servo 6: PWM pin 2
 const int SERVO1_PIN = 7;
 const int SERVO2_PIN = 6;
 const int SERVO3_PIN = 5;
+
+// Standard positional (micro) servos:
+// Servo 4: PWM pin 4
+// Servo 5: PWM pin 3
+// Servo 6: PWM pin 2
 const int SERVO4_PIN = 4;
 const int SERVO5_PIN = 3;
 const int SERVO6_PIN = 2;
 
-// Create Servo objects for six servos
+// Create Servo objects for all six servos
 Servo servo1;
 Servo servo2;
 Servo servo3;
 Servo servo4;
 Servo servo5;
 Servo servo6;
+
+// ---------------- Helper for Continuous Rotation Servos ----------------
+// For continuous rotation servos, 90° is neutral (stop).
+// Values within a small deadband around 90 will be treated as "stop."
+const int deadband = 5;  // Adjust as needed
+
+void setContinuousServo(Servo &servo, int angle) {
+  // If within the deadband of 90, stop the servo.
+  if (abs(angle - 90) < deadband) {
+    servo.write(90);
+  } else {
+    servo.write(angle);
+  }
+}
 
 // ---------------- Utility Functions ----------------
 
@@ -159,10 +176,13 @@ void setup() {
   servo5.attach(SERVO5_PIN);
   servo6.attach(SERVO6_PIN);
   
-  // Optionally, set all servos to neutral position (90°)
+  // Set default positions:
+  // For continuous rotation servos (servo1-3): set to neutral (90) to stop.
   servo1.write(90);
   servo2.write(90);
   servo3.write(90);
+  
+  // For positional micro servos (servo4-6): set to desired initial angles.
   servo4.write(180);
   servo5.write(137);
   servo6.write(100);
@@ -178,7 +198,7 @@ void loop() {
     Serial.print("Received: ");
     Serial.println(command);
     
-    // Speed update command
+    // Process speed update command
     if (command.startsWith("speed:")) {
       int newSpeed = command.substring(6).toInt();
       currentSpeed = newSpeed;
@@ -194,18 +214,18 @@ void loop() {
         String servoId = command.substring(0, colonIndex);
         int angle = command.substring(colonIndex + 1).toInt();
         if (servoId == "servo1") {
-          servo1.write(angle);
-          Serial.print("STATUS: Servo 1 set to ");
+          setContinuousServo(servo1, angle);
+          Serial.print("STATUS: Continuous Servo 1 set to ");
           Serial.print(angle);
           Serial.println("°");
         } else if (servoId == "servo2") {
-          servo2.write(angle);
-          Serial.print("STATUS: Servo 2 set to ");
+          setContinuousServo(servo2, angle);
+          Serial.print("STATUS: Continuous Servo 2 set to ");
           Serial.print(angle);
           Serial.println("°");
         } else if (servoId == "servo3") {
-          servo3.write(angle);
-          Serial.print("STATUS: Servo 3 set to ");
+          setContinuousServo(servo3, angle);
+          Serial.print("STATUS: Continuous Servo 3 set to ");
           Serial.print(angle);
           Serial.println("°");
         } else if (servoId == "servo4") {
@@ -225,7 +245,7 @@ void loop() {
           Serial.println("°");
         }
       }
-      return; // Servo command processed; exit loop iteration.
+      return; // Servo command processed.
     }
     
     // Sensor measurement commands
