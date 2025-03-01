@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="static/style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.9.0/nipplejs.min.js"></script>
- 
 </head>
 <body>
   <div class="container">
@@ -92,25 +91,32 @@
               <div>Speed: <span id="speedValue">50</span></div>
               <!-- Precise speed controls -->
               <div class="precise-controls">
-                <button class="btn btn-outline-secondary" 
-                        onmousedown="startSpeedAdjust(-1)" 
-                        onmouseup="stopSpeedAdjust()" 
-                        onmouseleave="stopSpeedAdjust()">
+                <button class="btn btn-outline-secondary" onmousedown="startSpeedAdjust(-1)" onmouseup="stopSpeedAdjust()" onmouseleave="stopSpeedAdjust()">
                   <i class="fas fa-minus"></i>
                 </button>
-                <button class="btn btn-outline-secondary" 
-                        onmousedown="startSpeedAdjust(1)" 
-                        onmouseup="stopSpeedAdjust()" 
-                        onmouseleave="stopSpeedAdjust()">
+                <button class="btn btn-outline-secondary" onmousedown="startSpeedAdjust(1)" onmouseup="stopSpeedAdjust()" onmouseleave="stopSpeedAdjust()">
                   <i class="fas fa-plus"></i>
                 </button>
+              </div>
+            </div>
+          </div>
+          <!-- Row 4: Display Panels -->
+          <div class="row my-3">
+            <div class="col-md-6">
+              <div id="motorStatus" class="alert alert-secondary" role="alert">
+                Motor status messages will appear here...
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div id="sensorMeasurements" class="alert alert-info" role="alert">
+                Sensor measurements will appear here...
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Manipulator Arm Control Tab -->
+      <!-- Manipulator Control Tab -->
       <div class="tab-pane fade" id="manipulator" role="tabpanel" aria-labelledby="manipulator-tab">
         <div class="card">
           <div class="card-header text-center">
@@ -240,19 +246,14 @@
 
     function updateServo(servo, angle) {
       document.getElementById(servo + 'Value').innerText = angle;
-      // Also update the slider control itself
       document.getElementById(servo + 'Slider').value = angle;
       socket.emit('command', servo + ':' + angle);
     }
 
     // Continuous servo adjustment
     function startServoAdjust(servo, delta) {
-      // Immediately update once
       adjustServo(servo, delta);
-      // Then set an interval for continuous adjustment
-      servoInterval = setInterval(() => {
-        adjustServo(servo, delta);
-      }, 100); // adjust every 100ms
+      servoInterval = setInterval(() => { adjustServo(servo, delta); }, 100);
     }
 
     function adjustServo(servo, delta) {
@@ -271,9 +272,7 @@
     // Continuous speed adjustment
     function startSpeedAdjust(delta) {
       adjustSpeed(delta);
-      speedInterval = setInterval(() => {
-        adjustSpeed(delta);
-      }, 100);
+      speedInterval = setInterval(() => { adjustSpeed(delta); }, 100);
     }
 
     function adjustSpeed(delta) {
@@ -294,11 +293,20 @@
     // Reset arm: set all servo sliders to default (90)
     function resetArm() {
       const servos = ['servo1','servo2','servo3','servo4','servo5'];
-      servos.forEach(servo => {
-        updateServo(servo, 90);
-      });
+      servos.forEach(servo => { updateServo(servo, 90); });
       sendCommand('reset_arm');
     }
+
+    // Listen for messages from the server
+    socket.on('arduino_response', function(data) {
+      let msg = data.data;
+      // Check prefix to decide which panel to update:
+      if (msg.indexOf("SENSOR:") === 0) {
+        document.getElementById("sensorMeasurements").innerText = msg.replace("SENSOR:", "").trim();
+      } else if (msg.indexOf("STATUS:") === 0) {
+        document.getElementById("motorStatus").innerText = msg.replace("STATUS:", "").trim();
+      }
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
       const joystick = nipplejs.create({

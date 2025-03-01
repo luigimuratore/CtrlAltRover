@@ -2,20 +2,20 @@
 
 // ---------------- Motor Control Pins ----------------
 const int PWM_ENA = 13;   // Motor 1 PWM
-const int IN1_PIN   = 51; // Motor 1 direction
-const int IN2_PIN   = 53;
+const int IN1_PIN = 51;   // Motor 1 direction
+const int IN2_PIN = 53;
 
 const int PWM_ENB = 11;   // Motor 2 PWM
-const int IN3_PIN   = 45;
-const int IN4_PIN   = 43;
+const int IN3_PIN = 45;
+const int IN4_PIN = 43;
 
 const int PWM_ENC = 12;   // Motor 3 PWM
-const int IN5_PIN   = 49;
-const int IN6_PIN   = 47;
+const int IN5_PIN = 49;
+const int IN6_PIN = 47;
 
 const int PWM_END = 10;   // Motor 4 PWM
-const int IN7_PIN   = 41;
-const int IN8_PIN   = 39;
+const int IN7_PIN = 41;
+const int IN8_PIN = 39;
 
 int currentSpeed = 50; // Default speed (percentage 0-100)
 
@@ -32,7 +32,6 @@ const int ECHO_LEFT = 33;
 // "right" sensor
 const int TRIG_RIGHT = 23;
 const int ECHO_RIGHT = 25;
-
 
 // ---------------- Utility Functions ----------------
 
@@ -77,7 +76,7 @@ void setMotorSpeed(int speed) {
 
 // Set motor directions based on desired mode.
 void setMotorMode(String mode) {
-  stopMotors(); // ensure motors are stopped before new direction
+  stopMotors(); // Ensure motors are stopped before new direction
   
   if (mode == "forward") {
     digitalWrite(IN1_PIN, HIGH); digitalWrite(IN2_PIN, LOW);
@@ -130,9 +129,8 @@ void setup() {
   pinMode(ECHO_RIGHT, INPUT);
   
   stopMotors();
-  Serial.println("Arduino Mega ready. Awaiting commands...");
+  Serial.println("STATUS: Arduino Mega ready. Awaiting commands...");
 }
-
 
 void loop() {
   if (Serial.available() > 0) {
@@ -141,15 +139,16 @@ void loop() {
     Serial.print("Received: ");
     Serial.println(command);
     
+    // Speed update command
     if (command.startsWith("speed:")) {
       int newSpeed = command.substring(6).toInt();
       currentSpeed = newSpeed;
-      Serial.print("Speed updated to: ");
+      Serial.print("STATUS: Speed updated to: ");
       Serial.println(currentSpeed);
       return;
     }
     
-    // Only measure sensor when sensor commands are received
+    // Sensor measurement commands
     if (command == "up") {
       long dist = measureDistance(TRIG_UP, ECHO_UP);
       Serial.print("SENSOR: Up sensor distance: ");
@@ -174,33 +173,34 @@ void loop() {
       Serial.print(dist);
       Serial.println(" cm");
     }
+    // Motor control commands
     else if (command == "avanti") {
       setMotorMode("forward");
       setMotorSpeed(currentSpeed);
-      Serial.println("Moving forward");
+      Serial.println("STATUS: Moving forward");
     }
     else if (command == "indietro") {
       setMotorMode("backward");
       setMotorSpeed(currentSpeed);
-      Serial.println("Moving backward");
+      Serial.println("STATUS: Moving backward");
     }
     else if (command == "sinistra") {
       setMotorMode("translation_left");
       setMotorSpeed(currentSpeed);
-      Serial.println("Turning left");
+      Serial.println("STATUS: Turning left");
     }
     else if (command == "destra") {
       setMotorMode("translation_right");
       setMotorSpeed(currentSpeed);
-      Serial.println("Turning right");
+      Serial.println("STATUS: Turning right");
     }
     else if (command == "stop") {
       stopMotors();
-      Serial.println("Stop: Motors stopped");
+      Serial.println("STATUS: Stop - Motors stopped");
     }
     else if (command == "emergency") {
       stopMotors();
-      Serial.println("EMERGENCY STOP: Motors stopped");
+      Serial.println("STATUS: EMERGENCY STOP - Motors stopped");
     }
   }
 }
