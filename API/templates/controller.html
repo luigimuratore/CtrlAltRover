@@ -126,26 +126,15 @@
             <div class="row">
               <!-- Servo 1 -->
               <div class="col-md-2 text-center">
-                <!-- Servo label at top -->
                 <label class="slider-label" for="servo1Slider">Servo 1</label>
-                <!-- Image centered under label -->
                 <img src="static/robot.png" alt="Servo 1" class="servo-image">
-                <!-- Slider below image -->
                 <input type="range" id="servo1Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo1', this.value)">
-                <!-- Angle readout -->
                 <div>Angle: <span id="servo1Value">90</span>°</div>
-                <!-- Arrow buttons -->
                 <div class="precise-controls">
-                  <button class="btn btn-outline-secondary" 
-                          onmousedown="startServoAdjust('servo1', -1)" 
-                          onmouseup="stopServoAdjust()" 
-                          onmouseleave="stopServoAdjust()">
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo1', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
                     <i class="fas fa-arrow-left"></i>
                   </button>
-                  <button class="btn btn-outline-secondary" 
-                          onmousedown="startServoAdjust('servo1', 1)" 
-                          onmouseup="stopServoAdjust()" 
-                          onmouseleave="stopServoAdjust()">
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo1', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
                     <i class="fas fa-arrow-right"></i>
                   </button>
                 </div>
@@ -210,6 +199,22 @@
                     <i class="fas fa-arrow-left"></i>
                   </button>
                   <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo5', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Servo 6 -->
+              <div class="col-md-2 text-center">
+                <label class="slider-label" for="servo6Slider">Servo 6</label>
+                <img src="static/robot.png" alt="Servo 6" class="servo-image">
+                <input type="range" id="servo6Slider" min="0" max="180" value="90" class="form-control-range" onchange="updateServo('servo6', this.value)">
+                <div>Angle: <span id="servo6Value">90</span>°</div>
+                <div class="precise-controls">
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo6', -1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
+                    <i class="fas fa-arrow-left"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" onmousedown="startServoAdjust('servo6', 1)" onmouseup="stopServoAdjust()" onmouseleave="stopServoAdjust()">
                     <i class="fas fa-arrow-right"></i>
                   </button>
                 </div>
@@ -292,15 +297,17 @@
 
     // Reset arm: set all servo sliders to default (90)
     function resetArm() {
-      const servos = ['servo1','servo2','servo3','servo4','servo5'];
-      servos.forEach(servo => { updateServo(servo, 90); });
+      const servos = ['servo1','servo2','servo3','servo4','servo5','servo6'];
+      servos.forEach(servo => {
+        updateServo(servo, 90);
+      });
       sendCommand('reset_arm');
     }
 
     // Listen for messages from the server
     socket.on('arduino_response', function(data) {
       let msg = data.data;
-      // Check prefix to decide which panel to update:
+      // Update the correct panel based on prefix.
       if (msg.indexOf("SENSOR:") === 0) {
         document.getElementById("sensorMeasurements").innerText = msg.replace("SENSOR:", "").trim();
       } else if (msg.indexOf("STATUS:") === 0) {
