@@ -5,8 +5,8 @@ import serial
 import time
 import threading
 
-# Configure serial connection to Arduino Mega
-arduino_port = '/dev/arduinoMega'  # Adjust if needed
+# Configure serial connection using persistent symlink from your udev rule
+arduino_port = '/dev/arduinoMega'
 baud_rate = 115200
 try:
     ser = serial.Serial(arduino_port, baud_rate, timeout=1)
@@ -16,20 +16,19 @@ except Exception as e:
 time.sleep(2)  # Allow Arduino to reset
 ser.reset_input_buffer()  # Flush any residual data
 
-
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def index():
-    return render_template('controller.html')  # Your web interface for sending commands
+    return render_template('controller.html')  # Your web interface
 
 speed = 50
 
 @socketio.on('command')
 def handle_command(command):
     global speed
-    # If the command is a speed update, e.g., "speed:60"
+    # Speed update command
     if command.startswith("speed:"):
         try:
             new_speed = int(command.split(":")[1])
@@ -41,7 +40,6 @@ def handle_command(command):
         return
 
     print(f"Received command: {command} with speed: {speed}")
-    # Send the command string to the Arduino over Serial
     ser.write((command + "\n").encode())
     print(f"Command '{command}' sent to Arduino.")
 
@@ -53,19 +51,13 @@ def serial_read_thread():
                 line = ser.readline().decode('utf-8', errors='replace').strip()
                 if line:
                     print("Arduino:", line)
-                    # Emit Arduino response to all connected clients
                     socketio.emit('arduino_response', {'data': line})
             except Exception as e:
                 print("Error reading from serial:", e)
         time.sleep(0.01)
 
 if __name__ == '__main__':
-    # Start the serial reading thread
     thread = threading.Thread(target=serial_read_thread, daemon=True)
     thread.start()
-    
-    # Run the Flask/SocketIO app
-    print("Starting server at...")
-    print("http://192.168.46.84:5001/")
-    
+    print("Starting server at http://192.168.46.84:5001/")
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)

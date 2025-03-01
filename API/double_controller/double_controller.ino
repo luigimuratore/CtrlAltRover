@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Servo.h>
 
 // ---------------- Motor Control Pins ----------------
 const int PWM_ENA = 13;   // Motor 1 PWM
@@ -17,7 +18,7 @@ const int PWM_END = 10;   // Motor 4 PWM
 const int IN7_PIN   = 41;
 const int IN8_PIN   = 39;
 
-int currentSpeed = 50; // Default speed (percentage 0-100)
+int currentSpeed = 50; // Default speed (0-100%)
 
 // ---------------- HC-SR04 Sensor Pins ----------------
 // "up" sensor (front)
@@ -33,6 +34,27 @@ const int ECHO_LEFT = 33;
 const int TRIG_RIGHT = 23;
 const int ECHO_RIGHT = 25;
 
+// ---------------- Servo Pins ----------------
+// Servo 1: PWM pin 7
+// Servo 2: PWM pin 6
+// Servo 3: PWM pin 5
+// Servo 4: PWM pin 4
+// Servo 5: PWM pin 3
+// Servo 6: PWM pin 2
+const int SERVO1_PIN = 7;
+const int SERVO2_PIN = 6;
+const int SERVO3_PIN = 5;
+const int SERVO4_PIN = 4;
+const int SERVO5_PIN = 3;
+const int SERVO6_PIN = 2;
+
+// Create Servo objects for six servos
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+Servo servo5;
+Servo servo6;
 
 // ---------------- Utility Functions ----------------
 
@@ -77,7 +99,7 @@ void setMotorSpeed(int speed) {
 
 // Set motor directions based on desired mode.
 void setMotorMode(String mode) {
-  stopMotors(); // ensure motors are stopped before new direction
+  stopMotors(); // Ensure motors are stopped before new direction
   
   if (mode == "forward") {
     digitalWrite(IN1_PIN, HIGH); digitalWrite(IN2_PIN, LOW);
@@ -129,10 +151,25 @@ void setup() {
   pinMode(TRIG_RIGHT, OUTPUT);
   pinMode(ECHO_RIGHT, INPUT);
   
+  // Initialize servo pins
+  servo1.attach(SERVO1_PIN);
+  servo2.attach(SERVO2_PIN);
+  servo3.attach(SERVO3_PIN);
+  servo4.attach(SERVO4_PIN);
+  servo5.attach(SERVO5_PIN);
+  servo6.attach(SERVO6_PIN);
+  
+  // Optionally, set all servos to neutral position (90°)
+  servo1.write(90);
+  servo2.write(90);
+  servo3.write(90);
+  servo4.write(90);
+  servo5.write(90);
+  servo6.write(90);
+  
   stopMotors();
-  Serial.println("Arduino Mega ready. Awaiting commands...");
+  Serial.println("STATUS: Arduino Mega ready. Awaiting commands...");
 }
-
 
 void loop() {
   if (Serial.available() > 0) {
@@ -141,15 +178,57 @@ void loop() {
     Serial.print("Received: ");
     Serial.println(command);
     
+    // Speed update command
     if (command.startsWith("speed:")) {
       int newSpeed = command.substring(6).toInt();
       currentSpeed = newSpeed;
-      Serial.print("Speed updated to: ");
+      Serial.print("STATUS: Speed updated to: ");
       Serial.println(currentSpeed);
       return;
     }
     
-    // Only measure sensor when sensor commands are received
+    // Check if it's a servo command (format: "servoX:angle")
+    if (command.startsWith("servo")) {
+      int colonIndex = command.indexOf(":");
+      if (colonIndex > 0) {
+        String servoId = command.substring(0, colonIndex);
+        int angle = command.substring(colonIndex + 1).toInt();
+        if (servoId == "servo1") {
+          servo1.write(angle);
+          Serial.print("STATUS: Servo 1 set to ");
+          Serial.print(angle);
+          Serial.println("°");
+        } else if (servoId == "servo2") {
+          servo2.write(angle);
+          Serial.print("STATUS: Servo 2 set to ");
+          Serial.print(angle);
+          Serial.println("°");
+        } else if (servoId == "servo3") {
+          servo3.write(angle);
+          Serial.print("STATUS: Servo 3 set to ");
+          Serial.print(angle);
+          Serial.println("°");
+        } else if (servoId == "servo4") {
+          servo4.write(angle);
+          Serial.print("STATUS: Servo 4 set to ");
+          Serial.print(angle);
+          Serial.println("°");
+        } else if (servoId == "servo5") {
+          servo5.write(angle);
+          Serial.print("STATUS: Servo 5 set to ");
+          Serial.print(angle);
+          Serial.println("°");
+        } else if (servoId == "servo6") {
+          servo6.write(angle);
+          Serial.print("STATUS: Servo 6 set to ");
+          Serial.print(angle);
+          Serial.println("°");
+        }
+      }
+      return; // Servo command processed; exit loop iteration.
+    }
+    
+    // Sensor measurement commands
     if (command == "up") {
       long dist = measureDistance(TRIG_UP, ECHO_UP);
       Serial.print("SENSOR: Up sensor distance: ");
@@ -174,33 +253,34 @@ void loop() {
       Serial.print(dist);
       Serial.println(" cm");
     }
+    // Motor control commands
     else if (command == "avanti") {
       setMotorMode("forward");
       setMotorSpeed(currentSpeed);
-      Serial.println("Moving forward");
+      Serial.println("STATUS: Moving forward");
     }
     else if (command == "indietro") {
       setMotorMode("backward");
       setMotorSpeed(currentSpeed);
-      Serial.println("Moving backward");
+      Serial.println("STATUS: Moving backward");
     }
     else if (command == "sinistra") {
       setMotorMode("translation_left");
       setMotorSpeed(currentSpeed);
-      Serial.println("Turning left");
+      Serial.println("STATUS: Turning left");
     }
     else if (command == "destra") {
       setMotorMode("translation_right");
       setMotorSpeed(currentSpeed);
-      Serial.println("Turning right");
+      Serial.println("STATUS: Turning right");
     }
     else if (command == "stop") {
       stopMotors();
-      Serial.println("Stop: Motors stopped");
+      Serial.println("STATUS: Stop - Motors stopped");
     }
     else if (command == "emergency") {
       stopMotors();
-      Serial.println("EMERGENCY STOP: Motors stopped");
+      Serial.println("STATUS: EMERGENCY STOP - Motors stopped");
     }
   }
 }
