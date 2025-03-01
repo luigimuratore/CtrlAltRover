@@ -43,26 +43,7 @@ def handle_command(command):
     ser.write((command + "\n").encode())
     print(f"Command '{command}' sent to Arduino.")
 
-def serial_read_thread():
-    """Continuously read from the Arduino and emit responses to web clients."""
-    while True:
-        if ser.in_waiting:
-            try:
-                line = ser.readline().decode('utf-8').strip()
-                if line:
-                    print("Arduino:", line)
-                    # Emit Arduino response to all connected clients
-                    socketio.emit('arduino_response', {'data': line})
-            except Exception as e:
-                print("Error reading from serial:", e)
-        time.sleep(0.01)
 
 if __name__ == '__main__':
-    # Start the serial reading thread
-    thread = threading.Thread(target=serial_read_thread, daemon=True)
-    thread.start()
-    
     # Run the Flask/SocketIO app
-    print("Starting server at...")
-    print("http://192.168.46.84:5001/")
     socketio.run(app, host='0.0.0.0', port=5001, debug=True)
