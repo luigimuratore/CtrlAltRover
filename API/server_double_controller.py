@@ -9,9 +9,9 @@ raspberry = False
 # Establish a serial connection to the Arduino Mega
 try:
     # Change '/dev/ttyACM0' to the appropriate port and match the baud rate to the Arduino code
-    arduino = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+    arduino = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
     time.sleep(2)  # Wait for Arduino to reset and initialize
-    print("Arduino connected via serial on /dev/ttyACM0")
+    print("Arduino connected via serial on /dev/ttyUSB0")
 except Exception as e:
     print("Error connecting to Arduino:", e)
     arduino = None
