@@ -24,14 +24,14 @@ int currentSpeed = 50; // Default speed (percentage 0-100)
 const int TRIG_UP = 35;
 const int ECHO_UP = 37;
 // "down" sensor (rear)
-const int TRIG_DOWN = 29;
-const int ECHO_DOWN = 27;
+const int TRIG_DOWN = 27;
+const int ECHO_DOWN = 29;
 // "left" sensor
-const int TRIG_LEFT = 33;
-const int ECHO_LEFT = 31;
+const int TRIG_LEFT = 31;
+const int ECHO_LEFT = 33;
 // "right" sensor
-const int TRIG_RIGHT = 25;
-const int ECHO_RIGHT = 23;
+const int TRIG_RIGHT = 23;
+const int ECHO_RIGHT = 25;
 
 // ---------------- Utility Functions ----------------
 
@@ -202,10 +202,15 @@ void loop() {
       setMotorSpeed(currentSpeed);
       Serial.println("Turning right");
     }
-    // Emergency stop command stops motors immediately.
-    else if (command == "stop" || command == "emergency") {
+    // stop command stops motors
+    else if (command == "stop") {
       stopMotors();
-      Serial.println("Emergency stop: Motors stopped");
+      Serial.println("Stop: Motors stopped");
+    }
+    // Emergency stop command stops motors immediately.
+    else if (command == "emergency") {
+      stopMotors();
+      Serial.println("EMERGENCY STOP: Motors stopped");
     }
   }
 }
