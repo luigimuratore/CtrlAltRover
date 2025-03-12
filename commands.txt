@@ -30,3 +30,5 @@ arduino-cli compile --fqbn arduino:avr:mega /home/gigi/CrtlAltRover/... (command
 
 # Upload
 arduino-cli upload -p /dev/arduinoMega --fqbn arduino:avr:mega /home/gigi/CrtlAltRover/...
+
+--------------------------------------------------
