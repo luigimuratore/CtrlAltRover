@@ -1,4 +1,6 @@
-[!][Insight: Contributors](https://github.com/luigimuratore/CtrlAltRover/graphs/contributors)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Insights: Contributors](https://img.shields.io/github/contributors/PietroLeoncini/PolypHUB-Data-Harmonization-for-Polyp-Detection.svg)](https://github.com/luigimuratore/CtrlAltRover/graphs/contributors)
+
 
 <div align="center">
   
