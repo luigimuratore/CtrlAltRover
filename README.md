@@ -1,3 +1,5 @@
+[!][Insight: Contributors](https://github.com/luigimuratore/CtrlAltRover/graphs/contributors)
+
 <div align="center">
   
 # **Ctrl+Alt+Rover**  
