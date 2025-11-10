@@ -32,7 +32,7 @@ for trig, echo in sensor_pins:
     GPIO.setup(echo, GPIO.IN)
 
 # Open serial connection to Arduino (adjust port if needed)
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 time.sleep(2)  # Wait for Arduino to reset
 
 def measure_distance(trig, echo):

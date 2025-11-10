@@ -8,6 +8,10 @@ import select
 ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 time.sleep(2)  # Allow Arduino time to reset
 
+# Clear any garbage in the buffer
+ser.reset_input_buffer()
+ser.reset_output_buffer()
+
 print("Raspberry Pi - Arduino Sensor Reader")
 print("Enter a sensor number (1-4) for continuous real-time measurements.")
 print("Type 'e' (and press Enter) during continuous reading to exit that mode.")
@@ -32,8 +36,14 @@ while True:
         
         # Read and print any available response lines from Arduino
         while ser.in_waiting:
-            response = ser.readline().decode('utf-8').rstrip()
-            print(response)
+            try:
+                response = ser.readline().decode('utf-8', errors='replace').rstrip()
+                if response:  # Only print non-empty lines
+                    print(response)
+            except Exception as e:
+                print(f"Error reading serial: {e}")
+                ser.reset_input_buffer()  # Clear buffer on error
+                break
         
         # Check non-blockingly if the user has entered 'e' to exit continuous mode
         # Using select.select for non-blocking stdin check

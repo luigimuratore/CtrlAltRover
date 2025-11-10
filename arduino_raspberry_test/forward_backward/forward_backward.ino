@@ -57,6 +57,12 @@ void loop() {
     else if (command.equalsIgnoreCase("backward") || command.equalsIgnoreCase("B")) {
       moveBackward();
     }
+    else if (command.equalsIgnoreCase("left") || command.equalsIgnoreCase("L")) {
+      moveLeft();
+    }
+    else if (command.equalsIgnoreCase("right") || command.equalsIgnoreCase("R")) {
+      moveRight();
+    }
     else if (command.equalsIgnoreCase("stop") || command.equalsIgnoreCase("S")) {
       stopMotors();
     }
@@ -110,6 +116,48 @@ void moveBackward() {
   Serial.println("Moving backward");
 }
 
+void moveLeft() {
+  // Left side motors (1 & 3) backward, right side motors (2 & 4) forward
+  digitalWrite(MOTOR1_IN1, LOW);   // Front-Left backward
+  digitalWrite(MOTOR1_IN2, HIGH);
+  analogWrite(MOTOR1_ENA, motorSpeed);
+  
+  digitalWrite(MOTOR2_IN1, HIGH);  // Front-Right forward
+  digitalWrite(MOTOR2_IN2, LOW);
+  analogWrite(MOTOR2_ENA, motorSpeed);
+  
+  digitalWrite(MOTOR3_IN1, LOW);   // Rear-Left backward
+  digitalWrite(MOTOR3_IN2, HIGH);
+  analogWrite(MOTOR3_ENA, motorSpeed);
+  
+  digitalWrite(MOTOR4_IN1, HIGH);  // Rear-Right forward
+  digitalWrite(MOTOR4_IN2, LOW);
+  analogWrite(MOTOR4_ENA, motorSpeed);
+
+  Serial.println("Moving left");
+}
+
+void moveRight() {
+  // Left side motors (1 & 3) forward, right side motors (2 & 4) backward
+  digitalWrite(MOTOR1_IN1, HIGH);  // Front-Left forward
+  digitalWrite(MOTOR1_IN2, LOW);
+  analogWrite(MOTOR1_ENA, motorSpeed);
+  
+  digitalWrite(MOTOR2_IN1, LOW);   // Front-Right backward
+  digitalWrite(MOTOR2_IN2, HIGH);
+  analogWrite(MOTOR2_ENA, motorSpeed);
+  
+  digitalWrite(MOTOR3_IN1, HIGH);  // Rear-Left forward
+  digitalWrite(MOTOR3_IN2, LOW);
+  analogWrite(MOTOR3_ENA, motorSpeed);
+  
+  digitalWrite(MOTOR4_IN1, LOW);   // Rear-Right backward
+  digitalWrite(MOTOR4_IN2, HIGH);
+  analogWrite(MOTOR4_ENA, motorSpeed);
+
+  Serial.println("Moving right");
+}
+
 // Function to stop all motors
 void stopMotors() {
   // For each motor: IN1 and IN2 LOW, PWM set to 0
@@ -131,3 +179,4 @@ void stopMotors() {
 
   Serial.println("Motors stopped");
 }
+

@@ -10,6 +10,11 @@ def main():
     try:
         ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
         time.sleep(2)  # Allow time for Arduino to reset and initialize
+        
+        # Clear any garbage in the buffer from previous connections
+        ser.reset_input_buffer()
+        ser.reset_output_buffer()
+        
         print(f"Connected to Arduino on {SERIAL_PORT}")
     except Exception as e:
         print("Error connecting to Arduino:", e)
@@ -19,6 +24,8 @@ def main():
     print("Available commands:")
     print("  forward   - Move motors forward")
     print("  backward  - Move motors backward")
+    print("  left      - Turn left (right motors forward, left motors backward)")
+    print("  right     - Turn right (left motors forward, right motors backward)")
     print("  stop      - Stop all motors")
     print("  quit      - Exit this program")
 
@@ -37,9 +44,14 @@ def main():
 
             # Read and print any response from the Arduino
             while ser.in_waiting:
-                response = ser.readline().decode('utf-8').strip()
-                if response:
-                    print("Arduino:", response)
+                try:
+                    response = ser.readline().decode('utf-8', errors='replace').strip()
+                    if response:
+                        print("Arduino:", response)
+                except Exception as e:
+                    print(f"Error reading response: {e}")
+                    ser.reset_input_buffer()
+                    break
     finally:
         ser.close()
 
