@@ -268,6 +268,13 @@ In the `server.py` is ...
 
 ----------------------------------
 
+## LiDAR
+
+<div align="center">
+<img src="media/lidar.png" width="500"/>
+</div>
+
+----------------------------------
 
 ## Object recognition with YOLO
 
